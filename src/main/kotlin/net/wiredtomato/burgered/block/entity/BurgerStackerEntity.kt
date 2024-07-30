@@ -15,11 +15,11 @@ import net.minecraft.registry.HolderLookup
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.init.BurgeredBlockEntities
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.init.BurgeredItems
+import net.wiredtomato.burgered.item.BurgerItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
 import kotlin.math.absoluteValue
 
@@ -35,9 +35,17 @@ class BurgerStackerEntity(
         if (item is BurgerIngredient) {
             ensureNonEmptyBurger()
             addIngredient(player, stack, item)
-        } else if (item is Burger) {
+        } else if (item is BurgerItem) {
             ensureNonEmptyBurger()
-            item.ingredients().forEach { addIngredient(player, stack, it, false) }
+            val ingredients = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).ingredients()
+            ingredients.forEach { addIngredient(player, stack, it, consume = false, updateSloppy = false) }
+            updateSloppiness(burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT))
+            val component = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
+            val sloppiness = component.sloppiness()
+            val otherSloppiness = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).sloppiness()
+            if (otherSloppiness > sloppiness) {
+                BurgerComponent.setSloppiness(component, burger, otherSloppiness)
+            }
             stack.consume(1, player)
         }
     }
@@ -81,23 +89,27 @@ class BurgerStackerEntity(
         super.markDirty()
     }
 
-    fun addIngredient(player: PlayerEntity, stack: ItemStack, ingredient: BurgerIngredient, consume: Boolean = true): Option<Text> {
+    fun addIngredient(player: PlayerEntity, stack: ItemStack, ingredient: BurgerIngredient, consume: Boolean = true, updateSloppy: Boolean = true): Option<Text> {
         var burgerComponent = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
         val result = BurgerComponent.appendIngredient(burgerComponent, burger, ingredient)
         burgerComponent = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
         result.onNone {
             markDirty()
-
-            if (ticksSinceLastChange <= 4) {
-                val sloppiness = burgerComponent.sloppiness() + (0.02 *  (1 - ticksSinceLastChange).absoluteValue).coerceAtMost(1.0)
-                BurgerComponent.setSloppiness(burgerComponent, burger, sloppiness)
-            }
-
+            if (updateSloppy) updateSloppiness(burgerComponent)
             if (consume) stack.consume(1, player)
         }
 
-        ticksSinceLastChange = 0
+        if (updateSloppy) ticksSinceLastChange = 0
         return result
+    }
+
+    fun updateSloppiness(component: BurgerComponent) {
+        if (ticksSinceLastChange <= 4) {
+            val sloppiness = component.sloppiness() + (0.02 *  (1 - ticksSinceLastChange).absoluteValue).coerceAtMost(1.0)
+            BurgerComponent.setSloppiness(component, burger, sloppiness)
+        }
+
+        ticksSinceLastChange = 0
     }
 
     fun ensureNonEmptyBurger() {
