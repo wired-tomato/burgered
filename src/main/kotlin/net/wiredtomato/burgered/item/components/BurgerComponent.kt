@@ -14,7 +14,7 @@ import net.minecraft.text.Text
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
-import net.wiredtomato.burgered.data.gen.CommonText
+import net.wiredtomato.burgered.data.CommonText
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import java.util.function.Consumer
 
@@ -49,7 +49,7 @@ data class BurgerComponent(
     }
 
     override fun eatTime(): Float {
-        return ingredients().size / 2f
+        return (ingredients().size / 2f).coerceAtMost(4f)
     }
 
     override fun sloppiness(): Double = burgerSloppiness

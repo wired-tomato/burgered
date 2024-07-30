@@ -25,7 +25,7 @@ object BurgeredItems {
             BurgerIngredientSettings()
                 .saturation(1)
                 .overSaturation(1.0)
-                .modelHeight(1.5)
+                .modelHeight(2.0)
         )
     )
 
@@ -35,7 +35,7 @@ object BurgeredItems {
             BurgerIngredientSettings()
                 .saturation(1)
                 .overSaturation(1.0)
-                .modelHeight(1.5)
+                .modelHeight(2.0)
         )
     )
 
@@ -45,7 +45,17 @@ object BurgeredItems {
             BurgerIngredientSettings()
                 .saturation(2)
                 .overSaturation(4.0)
-                .modelHeight(1.5)
+                .modelHeight(1.0)
+        )
+    )
+
+    val CHEESE_SLICE = register(
+        "cheese_slice",
+        BurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(1)
+                .overSaturation(0.25)
+                .modelHeight(1.0)
         )
     )
 

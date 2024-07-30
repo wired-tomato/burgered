@@ -1,4 +1,4 @@
-package net.wiredtomato.burgered.data.gen
+package net.wiredtomato.burgered.data
 
 import net.wiredtomato.burgered.Burgered
 

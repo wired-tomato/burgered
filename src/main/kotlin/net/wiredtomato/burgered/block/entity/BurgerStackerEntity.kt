@@ -105,7 +105,7 @@ class BurgerStackerEntity(
 
     fun updateSloppiness(component: BurgerComponent) {
         if (ticksSinceLastChange <= 4) {
-            val sloppiness = component.sloppiness() + (0.02 *  (1 - ticksSinceLastChange).absoluteValue).coerceAtMost(1.0)
+            val sloppiness = (component.sloppiness() + (0.02 *  (1 - ticksSinceLastChange).absoluteValue)).coerceAtMost(1.0)
             BurgerComponent.setSloppiness(component, burger, sloppiness)
         }
 
