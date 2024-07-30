@@ -11,14 +11,6 @@ import net.wiredtomato.burgered.item.BurgerItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
 
 object BurgeredItems {
-    val BURGER = register(
-        "burger",
-        BurgerItem(
-            Item.Settings()
-                .component(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
-        )
-    )
-
     val TOP_BUN = register(
         "top_bun",
         BurgerIngredientItem(
@@ -56,6 +48,15 @@ object BurgeredItems {
                 .saturation(1)
                 .overSaturation(0.25)
                 .modelHeight(1.0)
+        )
+    )
+
+
+    val BURGER = register(
+        "burger",
+        BurgerItem(
+            Item.Settings()
+                .component(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
         )
     )
 

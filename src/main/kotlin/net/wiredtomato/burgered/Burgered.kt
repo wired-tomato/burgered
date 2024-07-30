@@ -1,10 +1,7 @@
 package net.wiredtomato.burgered
 
 import net.minecraft.util.Identifier
-import net.wiredtomato.burgered.init.BurgeredBlockEntities
-import net.wiredtomato.burgered.init.BurgeredBlocks
-import net.wiredtomato.burgered.init.BurgeredDataComponents
-import net.wiredtomato.burgered.init.BurgeredItems
+import net.wiredtomato.burgered.init.*
 import org.slf4j.LoggerFactory
 
 object Burgered {
@@ -16,6 +13,7 @@ object Burgered {
         BurgeredBlockEntities
         BurgeredItems
         BurgeredDataComponents
+        BurgeredTabs
     }
 
     fun id(path: String) = Identifier.of(MOD_ID, path)

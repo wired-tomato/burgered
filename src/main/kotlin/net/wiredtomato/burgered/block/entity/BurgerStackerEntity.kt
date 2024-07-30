@@ -115,6 +115,7 @@ class BurgerStackerEntity(
     fun ensureNonEmptyBurger() {
         if (burger.isEmpty) {
             burger = ItemStack(BurgeredItems.BURGER)
+            burger.set(BurgeredDataComponents.BURGER, BurgerComponent())
         }
     }
 

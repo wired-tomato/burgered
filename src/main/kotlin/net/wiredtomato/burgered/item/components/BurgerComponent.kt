@@ -16,6 +16,8 @@ import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.data.CommonText
 import net.wiredtomato.burgered.init.BurgeredDataComponents
+import net.wiredtomato.burgered.init.BurgeredItems
+import net.wiredtomato.burgered.util.group
 import java.util.function.Consumer
 
 data class BurgerComponent(
@@ -29,8 +31,8 @@ data class BurgerComponent(
         config: TooltipConfig
     ) {
         appender.accept(Text.translatable(CommonText.INGREDIENTS))
-        burgerIngredients.forEach { ingredient ->
-            appender.accept(ingredient.asItem().name)
+        burgerIngredients.reversed().group().forEach { group ->
+            appender.accept(Text.literal("${group.count}x ").append(group.value.asItem().name))
         }
     }
 
@@ -63,7 +65,14 @@ data class BurgerComponent(
             ).apply(builder, ::BurgerComponent)
         }
 
-        val DEFAULT = BurgerComponent()
+        val DEFAULT = BurgerComponent(
+            listOf(
+                BurgeredItems.BOTTOM_BUN,
+                BurgeredItems.BEEF_PATTY,
+                BurgeredItems.CHEESE_SLICE,
+                BurgeredItems.TOP_BUN
+            )
+        )
 
         fun fromItem(ingredient: Item): BurgerIngredient {
             if (ingredient !is BurgerIngredient) throw IllegalStateException("Non ingredient item found: $ingredient")
