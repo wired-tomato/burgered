@@ -10,7 +10,6 @@ import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings), BurgerIngredient {
     private val saturation = settings.saturation()
     private val overSaturation = settings.overSaturation()
-    private val expirationTime = settings.expirationTime()
     private val modelHeight = settings.modelHeight()
     private val statusEffects = settings.statusEffects()
 
@@ -20,14 +19,12 @@ class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings),
 
     override fun saturation(): Int = saturation
     override fun overSaturation(): Double = overSaturation
-    override fun expirationTime(): Int = expirationTime
     override fun modelHeight(): Double = modelHeight
     override fun statusEffects(): List<StatusEffectEntry> = statusEffects
 
     class BurgerIngredientSettings : Settings() {
         private var saturation = 0
         private var overSaturation = 0.0
-        private var expirationTime = 0
         private var modelHeight = 0.0
         private var statusEffects = mutableListOf<StatusEffectEntry>()
 
@@ -40,12 +37,6 @@ class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings),
         fun overSaturation(): Double = overSaturation
         fun overSaturation(amount: Double): BurgerIngredientSettings {
             this.overSaturation = amount
-            return this
-        }
-
-        fun expirationTime(): Int = expirationTime
-        fun expirationTime(amount: Int): BurgerIngredientSettings {
-            this.expirationTime = amount
             return this
         }
 

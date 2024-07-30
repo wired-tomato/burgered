@@ -9,7 +9,6 @@ interface BurgerIngredient : ItemConvertible {
     fun canBePutOn(stack: ItemStack, burger: Burger): Boolean
     fun saturation(): Int
     fun overSaturation(): Double
-    fun expirationTime(): Int
     fun modelHeight(): Double
     fun statusEffects(): List<StatusEffectEntry>
 }
