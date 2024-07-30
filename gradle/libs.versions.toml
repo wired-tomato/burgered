@@ -1,0 +1,19 @@
+[versions]
+minecraft = "1.21"
+quilt_mappings = "1.21+build.12"
+fabric_loader = "0.15.11"
+fabric_kt = "1.11.0+kotlin.2.0.0"
+fabric_api = "0.100.7+1.21"
+farrow = "1.0.0+arrow.1.2.4"
+minotaur = "2.+"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+quilt_mappings = { module = "org.quiltmc:quilt-mappings", version.ref = "quilt_mappings" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
+fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric_kt" }
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
+farrow = { module = "net.wiredtomato:farrow", version.ref = "farrow" }
+
+[plugins]
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
