@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ItemStackMixin {
     @ModifyReturnValue(method = "getComponents", at = @At("RETURN"))
     public DataComponentMap changeFoodComponent(DataComponentMap original) {
-        return ItemStackFoodComponentKt.modifyFoodComponent(original);
+        return ItemStackFoodComponentKt.modifyFoodComponent((ItemStack) (Object) this, original);
     }
 }
