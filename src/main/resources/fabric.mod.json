@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "burgered",
 	"version": "${version}",
-	"name": "WiredTomato's Gun Mod",
-	"description": "Generic gun mod #17",
+	"name": "Burgered",
+	"description": "Burgers, Burgers, & More Burgers",
 	"authors": [
 		"WiredTomato"
 	],
@@ -30,6 +30,12 @@
 		"fabric-datagen": [
 			{
 				"value": "net.wiredtomato.burgered.data.gen.BurgeredData",
+				"adapter": "kotlin"
+			}
+		],
+		"emi": [
+			{
+				"value": "net.wiredtomato.burgered.compat.emi.EMIPlugin",
 				"adapter": "kotlin"
 			}
 		]
