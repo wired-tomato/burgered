@@ -1,5 +1,7 @@
 package net.wiredtomato.burgered.block
 
+import arrow.core.Option
+import arrow.core.none
 import com.mojang.serialization.MapCodec
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
@@ -9,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.function.BooleanBiFunction
 import net.minecraft.util.hit.BlockHitResult
@@ -33,11 +36,12 @@ class BurgerStackerBlock(settings: Settings) : BlockWithEntity(settings) {
     ): ActionResult {
         val entity = world.getBlockEntity(pos) ?: return ActionResult.PASS
         if (entity !is BurgerStackerEntity) return ActionResult.PASS
-        if (player.isSneaking) {
+        val result: Option<Text> = if (player.isSneaking) {
             entity.claimStack(player)
+            none()
         } else entity.addStack(player, player.mainHandStack)
 
-        return ActionResult.SUCCESS
+        return if (result.isNone()) ActionResult.SUCCESS else ActionResult.PASS
     }
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

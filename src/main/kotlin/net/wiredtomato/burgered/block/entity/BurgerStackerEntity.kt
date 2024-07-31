@@ -1,6 +1,6 @@
 package net.wiredtomato.burgered.block.entity
 
-import arrow.core.Option
+import arrow.core.*
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -30,16 +30,18 @@ class BurgerStackerEntity(
     private var burger: ItemStack = ItemStack.EMPTY
     private var ticksSinceLastChange = 0
 
-    fun addStack(player: PlayerEntity, stack: ItemStack) {
+    fun addStack(player: PlayerEntity, stack: ItemStack): Option<Text> {
+        var result: Option<Text> = Text.empty().some()
         val item = stack.item
         if (item is BurgerIngredient) {
             ensureNonEmptyBurger()
-            addIngredient(player, stack, item)
+            result = addIngredient(player, stack, item)
         } else if (item is BurgerItem) {
             ensureNonEmptyBurger()
             val ingredients = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).ingredients()
-            ingredients.forEach { addIngredient(player, stack, it, consume = false, updateSloppy = false) }
+            ingredients.forEach { ingredient -> addIngredient(player, stack, ingredient, false, updateSloppy = false) }
             updateSloppiness(burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT))
+            result = none()
             val component = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
             val sloppiness = component.sloppiness()
             val otherSloppiness = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).sloppiness()
@@ -48,6 +50,8 @@ class BurgerStackerEntity(
             }
             stack.consume(1, player)
         }
+
+        return result
     }
 
     fun claimStack(player: PlayerEntity) {
