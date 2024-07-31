@@ -6,11 +6,14 @@ import arrow.core.some
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.client.item.TooltipConfig
+import net.minecraft.entity.LivingEntity
+import net.minecraft.item.FoodComponent
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.TooltipAppender
 import net.minecraft.registry.Registries
 import net.minecraft.text.Text
+import net.minecraft.world.World
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
@@ -60,6 +63,9 @@ data class BurgerComponent(
     }
 
     override fun sloppiness(): Double = burgerSloppiness
+    override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) {
+        ingredients().forEach { it.onEat(entity, world, stack, component) }
+    }
 
     companion object : Burger.Modifier<BurgerComponent> {
         val INGREDIENT_CODEC: Codec<BurgerIngredient> = Registries.ITEM.codec.xmap(::fromItem, ::toItem)

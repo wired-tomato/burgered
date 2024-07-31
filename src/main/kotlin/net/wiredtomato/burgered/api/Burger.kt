@@ -3,9 +3,10 @@ package net.wiredtomato.burgered.api
 import arrow.core.Option
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
+import net.wiredtomato.burgered.api.event.LivingEntityEvents
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 
-interface Burger {
+interface Burger : LivingEntityEvents.EatCallback {
     fun ingredients(): List<BurgerIngredient>
     fun saturation(): Int
     fun overSaturation(): Double

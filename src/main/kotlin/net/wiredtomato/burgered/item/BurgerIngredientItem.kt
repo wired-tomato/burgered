@@ -1,13 +1,16 @@
 package net.wiredtomato.burgered.item
 
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.effect.StatusEffectInstance
+import net.minecraft.item.FoodComponent
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.world.World
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 
-class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings), BurgerIngredient {
+open class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings), BurgerIngredient {
     private val saturation = settings.saturation()
     private val overSaturation = settings.overSaturation()
     private val modelHeight = settings.modelHeight()
@@ -21,6 +24,7 @@ class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings),
     override fun overSaturation(): Double = overSaturation
     override fun modelHeight(): Double = modelHeight
     override fun statusEffects(): List<StatusEffectEntry> = statusEffects
+    override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) { }
 
     class BurgerIngredientSettings : Settings() {
         private var saturation = 0
