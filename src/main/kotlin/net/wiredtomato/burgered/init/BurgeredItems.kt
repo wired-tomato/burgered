@@ -1,5 +1,7 @@
 package net.wiredtomato.burgered.init
 
+import net.minecraft.entity.effect.StatusEffectInstance
+import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.registry.Registries
@@ -33,12 +35,23 @@ object BurgeredItems {
         )
     )
 
+    val RAW_BEEF_PATTY = register(
+        "raw_beef_patty",
+        BurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(1)
+                .overSaturation(2.0)
+                .modelHeight(1.0)
+                .statusEffect(StatusEffectInstance(StatusEffects.POISON, 200, 2), 0.25f)
+        )
+    )
+
     val BEEF_PATTY = register(
         "beef_patty",
         BurgerIngredientItem(
             BurgerIngredientSettings()
-                .saturation(2)
-                .overSaturation(4.0)
+                .saturation(4)
+                .overSaturation(8.0)
                 .modelHeight(1.0)
         )
     )
