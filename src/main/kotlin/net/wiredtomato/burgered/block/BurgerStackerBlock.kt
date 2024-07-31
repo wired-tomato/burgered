@@ -36,12 +36,16 @@ class BurgerStackerBlock(settings: Settings) : BlockWithEntity(settings) {
     ): ActionResult {
         val entity = world.getBlockEntity(pos) ?: return ActionResult.PASS
         if (entity !is BurgerStackerEntity) return ActionResult.PASS
-        val result: Option<Text> = if (player.isSneaking) {
+        val result: Pair<Option<Text>, Boolean> = if (player.isSneaking) {
             entity.claimStack(player)
-            none()
+            none<Text>() to true
         } else entity.addStack(player, player.mainHandStack)
 
-        return if (result.isNone()) ActionResult.SUCCESS else ActionResult.PASS
+        result.first.onSome {
+            player.sendMessage(it, false)
+        }
+
+        return if (result.second) ActionResult.SUCCESS else ActionResult.PASS
     }
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

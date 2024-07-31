@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.item.FoodComponent
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
+import net.wiredtomato.burgered.api.event.LivingEntityEvents.EatCallback
 
 object LivingEntityEvents {
     val ON_EAT: Event<EatCallback> = EventFactory.createArrayBacked(EatCallback::class.java) { listeners ->

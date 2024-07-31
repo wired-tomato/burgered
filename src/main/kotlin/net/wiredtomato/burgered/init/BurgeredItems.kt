@@ -8,7 +8,9 @@ import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.item.BurgerIngredientItem
 import net.wiredtomato.burgered.item.BurgerIngredientItem.BurgerIngredientSettings
 import net.wiredtomato.burgered.item.BurgerItem
+import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
+import net.wiredtomato.burgered.item.components.VanillaBurgerIngredientComponent
 
 object BurgeredItems {
     val TOP_BUN = register(
@@ -61,12 +63,50 @@ object BurgeredItems {
         )
     )
 
+    val EDIBLE_BOOK = register(
+        "edible_book",
+        BurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(7)
+                .overSaturation(8.0)
+                .modelHeight(4.0)
+        )
+    )
+
+    val PICKLED_BEETS = register(
+        "pickled_beets",
+        BurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(2)
+                .overSaturation(1.0)
+                .modelHeight(0.0)
+        )
+    )
+
+    val ESTROGEN_WAFFLE = register("estrogen_waffle", Item(Item.Settings()))
+
+    val VANILLA_INGREDIENT = register(
+        "vanilla_ingredient",
+        VanillaItemBurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(2)
+                .overSaturation(4.0)
+                .modelHeight(1.0)
+                .component(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent.DEFAULT)
+        )
+    )
+
     val BURGER = register(
         "burger",
         BurgerItem(
             Item.Settings()
                 .component(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
         )
+    )
+
+    val BOOK_OF_BURGERS = register(
+        "book_of_burgers",
+        Item(Item.Settings())
     )
 
     val BURGER_STACKER = register("burger_stacker", BlockItem(BurgeredBlocks.BURGER_STACKER, Item.Settings()))

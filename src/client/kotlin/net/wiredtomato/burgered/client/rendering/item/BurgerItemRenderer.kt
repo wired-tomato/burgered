@@ -14,6 +14,7 @@ import net.minecraft.util.random.RandomSeed
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.init.BurgeredDataComponents
+import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -38,15 +39,15 @@ object BurgerItemRenderer : DynamicItemRenderer {
 
         itemOffsets(matrices, mode)
         burger.ingredients().forEachIndexed { i, ingredient ->
-            val offsets = sloppinessOffset(burger, ingredient, i)
+            val offsets = sloppinessOffset(burger, ingredient.second, i)
             matrices.push()
-            ingredientOffset(itemRenderer, matrices, mode, ingredient)
+            ingredientOffset(itemRenderer, matrices, mode, ingredient.first, ingredient.second)
             matrices.rotate(Axis.X_POSITIVE.rotationDegrees(offsets.x))
             if (mode != ModelTransformationMode.GUI) matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(offsets.y))
             matrices.rotate(Axis.Z_POSITIVE.rotationDegrees(offsets.z))
 
             itemRenderer.renderItem(
-                ItemStack(ingredient),
+                ingredient.first,
                 mode,
                 light,
                 overlay,
@@ -57,7 +58,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
 
             matrices.pop()
-            matrices.translate(0.0, ingredient.modelHeight() / 16.0, 0.0)
+            matrices.translate(0.0, (ingredient.second.modelHeight() / 16.0) * getIngredientScale(ingredient.second), 0.0)
         }
 
         matrices.pop()
@@ -83,10 +84,14 @@ object BurgerItemRenderer : DynamicItemRenderer {
         matrices.translate(0.5f, 0.5f, 0.5f)
     }
 
-    fun ingredientOffset(itemRenderer: ItemRenderer, matrices: MatrixStack, mode: ModelTransformationMode, ingredient: BurgerIngredient) {
-        val model = itemRenderer.models.getModel(ingredient.asItem()) ?: return
+    fun ingredientOffset(itemRenderer: ItemRenderer, matrices: MatrixStack, mode: ModelTransformationMode, ingredientStack: ItemStack, ingredient: BurgerIngredient) {
+        val model = if (ingredient is VanillaItemBurgerIngredientItem) {
+            itemRenderer.models.getModel(ingredient.getVanillaItem(ingredientStack)) ?: return
+        } else itemRenderer.models.getModel(ingredient.asItem()) ?: return
+
         val transform = model.transformation.getTransformation(mode)
 
+        val scale = transform.scale
         if (!transform.scale.isIdentity()) {
             matrices.scale(1 / transform.scale.x, 1 / transform.scale.y, 1 / transform.scale.z)
         }
@@ -106,12 +111,43 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
         }
 
-        matrices.translate(
-            0f,
-            if (mode == ModelTransformationMode.GUI) 0f
-            else (8f / 16) + if (ingredient.modelHeight() == 0.0) 0.001f else 0f,
-            0f
-        )
+        if (ingredient is VanillaItemBurgerIngredientItem) {
+            matrices.scale(0.5f, 0.5f, 0.5f)
+            matrices.translate(-0.03, 0.035, 0.03)
+
+
+            when (mode) {
+                ModelTransformationMode.GROUND -> {
+                    matrices.translate(0.02, 0.23, -0.15)
+                }
+                ModelTransformationMode.GUI -> {
+                    matrices.translate(0.0, -1.0, 0.0)
+                }
+                ModelTransformationMode.FIRST_PERSON_RIGHT_HAND, ModelTransformationMode.FIRST_PERSON_LEFT_HAND -> {
+                    matrices.translate(-0.15, 0.42, -0.02)
+                    matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(0f))
+                    matrices.rotate(Axis.Z_NEGATIVE.rotationDegrees(65f))
+                    matrices.rotate(Axis.X_POSITIVE.rotationDegrees(25f))
+                }
+                ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, ModelTransformationMode.THIRD_PERSON_LEFT_HAND -> {
+                    matrices.translate(0.0, 0.42, -0.1)
+                }
+                else -> {}
+            }
+
+            matrices.rotate(Axis.X_POSITIVE.rotationDegrees(90f))
+        } else {
+            matrices.translate(
+                0f,
+                if (mode == ModelTransformationMode.GUI) 0f
+                else scale.y * ((8f / 16) + if (ingredient.modelHeight() == 0.0) 0.001f else 0f),
+                0f
+            )
+        }
+    }
+
+    fun getIngredientScale(ingredient: BurgerIngredient): Float {
+        return if (ingredient is VanillaItemBurgerIngredientItem) 0.5f else 1f
     }
 
     fun Vector3f.isIdentity() = this.x == 1f && this.y == 1f && this.z == 1f

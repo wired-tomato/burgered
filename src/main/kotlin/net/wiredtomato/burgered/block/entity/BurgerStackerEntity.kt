@@ -1,6 +1,8 @@
 package net.wiredtomato.burgered.block.entity
 
-import arrow.core.*
+import arrow.core.Option
+import arrow.core.none
+import arrow.core.some
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -30,18 +32,23 @@ class BurgerStackerEntity(
     private var burger: ItemStack = ItemStack.EMPTY
     private var ticksSinceLastChange = 0
 
-    fun addStack(player: PlayerEntity, stack: ItemStack): Option<Text> {
-        var result: Option<Text> = Text.empty().some()
+    fun addStack(player: PlayerEntity, stack: ItemStack): Pair<Option<Text>, Boolean> {
         val item = stack.item
+        var result: Option<Text> = Text.empty().some()
+        var interact = false
         if (item is BurgerIngredient) {
             ensureNonEmptyBurger()
             result = addIngredient(player, stack, item)
+            interact = true
         } else if (item is BurgerItem) {
             ensureNonEmptyBurger()
             val ingredients = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).ingredients()
-            ingredients.forEach { ingredient -> addIngredient(player, stack, ingredient, false, updateSloppy = false) }
-            updateSloppiness(burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT))
             result = none()
+            ingredients.forEach { ingredient ->
+                val oResult = addIngredient(player, ingredient.first, ingredient.second, false, updateSloppy = false)
+                if (oResult.isSome()) result = oResult
+            }
+            updateSloppiness(burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT))
             val component = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
             val sloppiness = component.sloppiness()
             val otherSloppiness = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT).sloppiness()
@@ -49,9 +56,10 @@ class BurgerStackerEntity(
                 BurgerComponent.setSloppiness(component, burger, otherSloppiness)
             }
             stack.consume(1, player)
+            interact = true
         }
 
-        return result
+        return result to interact
     }
 
     fun claimStack(player: PlayerEntity) {
@@ -95,7 +103,7 @@ class BurgerStackerEntity(
 
     fun addIngredient(player: PlayerEntity, stack: ItemStack, ingredient: BurgerIngredient, consume: Boolean = true, updateSloppy: Boolean = true): Option<Text> {
         var burgerComponent = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
-        val result = BurgerComponent.appendIngredient(burgerComponent, burger, ingredient)
+        val result = BurgerComponent.appendIngredient(burgerComponent, burger, stack.copy(), ingredient)
         burgerComponent = burger.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent.DEFAULT)
         result.onNone {
             markDirty()

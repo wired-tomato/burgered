@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.minecraft.data.client.ItemModelGenerator
 import net.minecraft.data.client.model.BlockStateModelGenerator
 import net.minecraft.data.client.model.Model
+import net.minecraft.data.client.model.Models
 import net.minecraft.util.Identifier
 import net.wiredtomato.burgered.init.BurgeredBlocks
 import net.wiredtomato.burgered.init.BurgeredItems
@@ -16,7 +17,10 @@ class BurgeredModelProvider(output: FabricDataOutput) : FabricModelProvider(outp
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerator) = with(itemModelGenerator) {
+        this.register(BurgeredItems.BOOK_OF_BURGERS, Models.SINGLE_LAYER_ITEM)
+        this.register(BurgeredItems.ESTROGEN_WAFFLE, Models.SINGLE_LAYER_ITEM)
         this.register(BurgeredItems.BURGER, DYNAMIC_MODEL)
+        this.register(BurgeredItems.VANILLA_INGREDIENT, DYNAMIC_MODEL)
     }
 
     companion object {

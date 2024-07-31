@@ -33,6 +33,7 @@ class BurgeredEnUsLangProvider(
 
         translationBuilder.add(CommonText.INGREDIENTS, "Ingredients: ")
         translationBuilder.add(CommonText.CANT_BE_PUT_ON_BURGER, "You can't put %s on this burger!")
+        translationBuilder.add(CommonText.BURGER_MAX_SIZE, "Sorry, I can't let you put anymore ingredient on this burger.")
         translationBuilder.add(CommonText.SLOPPINESS, "Sloppiness: %s")
     }
 

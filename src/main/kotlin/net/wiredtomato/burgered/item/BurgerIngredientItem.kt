@@ -1,5 +1,6 @@
 package net.wiredtomato.burgered.item
 
+import net.minecraft.component.DataComponentType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.FoodComponent
@@ -53,6 +54,11 @@ open class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(setti
         fun statusEffects(): List<StatusEffectEntry> = statusEffects
         fun statusEffect(effect: StatusEffectInstance, probability: Float): BurgerIngredientSettings {
             statusEffects.add(StatusEffectEntry(effect, probability))
+            return this
+        }
+
+        override fun <T : Any> component(type: DataComponentType<T>, value: T): BurgerIngredientSettings {
+            super.component(type, value)
             return this
         }
     }
