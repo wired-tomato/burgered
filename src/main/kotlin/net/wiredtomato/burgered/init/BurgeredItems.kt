@@ -85,6 +85,11 @@ object BurgeredItems {
 
     val ESTROGEN_WAFFLE = register("estrogen_waffle", Item(Item.Settings()))
 
+    val CUSTOM_BURGER_INGREDIENT = register(
+        "custom_burger_ingredient",
+        Item(Item.Settings())
+    )
+
     val VANILLA_INGREDIENT = register(
         "vanilla_ingredient",
         VanillaItemBurgerIngredientItem(

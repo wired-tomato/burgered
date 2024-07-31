@@ -38,6 +38,9 @@ class BurgeredRecipeProvider(
             .ingredient('B', BurgeredItems.BURGER)
             .criterion(hasItem(BurgeredItems.BOOK_OF_BURGERS), RecipesProvider.conditionsFromItem(BurgeredItems.BOOK_OF_BURGERS))
             .offerTo(exporter, Burgered.id("book_of_burgers_duplicate"))
+
+        RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.TOP_BUN, Items.BREAD)
+        RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.BOTTOM_BUN, Items.BREAD)
     }
 
     fun burgerSmithingRecipe(base: Item, result: Item): TransformSmithingRecipeJsonFactory {

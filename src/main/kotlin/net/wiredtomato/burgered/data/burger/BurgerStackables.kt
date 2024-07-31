@@ -7,6 +7,7 @@ import net.minecraft.item.Item
 import net.minecraft.registry.Registries
 import net.wiredtomato.burgered.api.event.LivingEntityEvents
 import net.wiredtomato.burgered.init.BurgeredRegistries
+import org.jetbrains.annotations.ApiStatus.Internal
 import java.util.Optional
 
 data class BurgerStackable(
@@ -33,4 +34,4 @@ data class BurgerStackable(
 
 fun interface BurgerStackableEatCallback : LivingEntityEvents.EatCallback
 
-internal object BurgerStackables : MutableList<BurgerStackable> by mutableListOf()
+@Internal object BurgerStackables : MutableList<BurgerStackable> by mutableListOf()

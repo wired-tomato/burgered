@@ -35,7 +35,7 @@
 		],
 		"emi": [
 			{
-				"value": "net.wiredtomato.burgered.compat.emi.EMIPlugin",
+				"value": "net.wiredtomato.burgered.client.compat.emi.EMIPlugin",
 				"adapter": "kotlin"
 			}
 		]
