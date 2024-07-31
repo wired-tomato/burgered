@@ -21,10 +21,10 @@ open class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(setti
         return true
     }
 
-    override fun saturation(): Int = saturation
-    override fun overSaturation(): Double = overSaturation
-    override fun modelHeight(): Double = modelHeight
-    override fun statusEffects(): List<StatusEffectEntry> = statusEffects
+    override fun saturation(stack: ItemStack): Int = saturation
+    override fun overSaturation(stack: ItemStack): Double = overSaturation
+    override fun modelHeight(stack: ItemStack): Double = modelHeight
+    override fun statusEffects(stack: ItemStack): List<StatusEffectEntry> = statusEffects
     override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) { }
 
     class BurgerIngredientSettings : Settings() {

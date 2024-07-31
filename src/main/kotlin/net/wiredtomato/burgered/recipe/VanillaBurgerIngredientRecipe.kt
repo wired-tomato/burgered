@@ -6,8 +6,8 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.SmithingRecipeInput
 import net.minecraft.registry.HolderLookup
 import net.minecraft.world.World
+import net.wiredtomato.burgered.data.burger.BurgerStackables
 import net.wiredtomato.burgered.init.BurgeredDataComponents
-import net.wiredtomato.burgered.init.BurgeredItemTags
 import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.item.components.BurgerComponent
 import net.wiredtomato.burgered.item.components.VanillaBurgerIngredientComponent
@@ -16,9 +16,9 @@ class VanillaBurgerIngredientRecipe(
     val category: RecipeCategory
 ) : CategorizedSmithingRecipe {
     override fun matches(input: SmithingRecipeInput, world: World): Boolean {
-        return input.template.isOf(BurgeredItems.BOOK_OF_BURGERS) &&
-                input.base.isIn(BurgeredItemTags.BURGER_STACKABLE) &&
-                isDefaultBurger(input.addition)
+        return matchesTemplateIngredient(input.template) &&
+                matchesBaseIngredient(input.base) &&
+                matchesAdditionIngredient(input.addition)
     }
 
     fun isDefaultBurger(stack: ItemStack): Boolean {
@@ -45,7 +45,7 @@ class VanillaBurgerIngredientRecipe(
     }
 
     override fun matchesBaseIngredient(stack: ItemStack): Boolean {
-        return stack.isIn(BurgeredItemTags.BURGER_STACKABLE)
+        return BurgerStackables.map { it.item }.contains(stack.item)
     }
 
     override fun matchesAdditionIngredient(stack: ItemStack): Boolean {

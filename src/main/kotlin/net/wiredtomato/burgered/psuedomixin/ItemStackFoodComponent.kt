@@ -6,6 +6,7 @@ import net.minecraft.item.FoodComponent
 import net.minecraft.item.ItemStack
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.init.BurgeredDataComponents
+import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
 import java.util.*
 
 fun modifyFoodComponent(stack: ItemStack, components: DataComponentMap): DataComponentMap {
@@ -38,13 +39,14 @@ fun modifyFoodComponent(stack: ItemStack, components: DataComponentMap): DataCom
 fun modifyFoodComponentIngredient(stack: ItemStack, components: DataComponentMap): DataComponentMap {
     val item = stack.item
     if (item !is BurgerIngredient) return components
+    if (item is VanillaItemBurgerIngredientItem) return components
 
     val builder = DataComponentMap.builder()
     builder.putAll(components)
 
-    val hunger = item.saturation()
-    val saturation = item.overSaturation()
-    val statusEffects = item.statusEffects()
+    val hunger = item.saturation(stack)
+    val saturation = item.overSaturation(stack)
+    val statusEffects = item.statusEffects(stack)
     val eatTime = 0.5f
 
     val foodComponent = FoodComponent(

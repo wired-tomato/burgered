@@ -10,7 +10,7 @@ import net.minecraft.registry.Registries
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.util.Identifier
 import net.wiredtomato.burgered.Burgered
-import net.wiredtomato.burgered.data.CommonText
+import net.wiredtomato.burgered.data.text.CommonText
 import java.util.concurrent.CompletableFuture
 import kotlin.jvm.optionals.getOrElse
 

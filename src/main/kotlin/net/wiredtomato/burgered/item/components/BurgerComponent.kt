@@ -16,7 +16,7 @@ import net.minecraft.world.World
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
-import net.wiredtomato.burgered.data.CommonText
+import net.wiredtomato.burgered.data.text.CommonText
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.util.createGroupsBy
@@ -46,15 +46,15 @@ data class BurgerComponent(
     override fun ingredients(): List<Pair<ItemStack, BurgerIngredient>> = burgerIngredients
 
     override fun saturation(): Int {
-        return burgerIngredients.map { it.second.saturation() }.reduce { acc, d -> acc + d }
+        return burgerIngredients.map { it.second.saturation(it.first) }.reduce { acc, d -> acc + d }
     }
 
     override fun overSaturation(): Double {
-        return burgerIngredients.map { it.second.overSaturation() }.reduce { acc, d -> acc + d }
+        return burgerIngredients.map { it.second.overSaturation(it.first) }.reduce { acc, d -> acc + d }
     }
 
     override fun statusEffects(): List<StatusEffectEntry> {
-        return ingredients().map { it.second.statusEffects() }.flatten()
+        return ingredients().map { it.second.statusEffects(it.first) }.flatten()
     }
 
     override fun eatTime(): Float {

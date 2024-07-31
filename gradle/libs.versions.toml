@@ -6,6 +6,7 @@ fabric_kt = "1.11.0+kotlin.2.0.0"
 fabric_api = "0.100.7+1.21"
 farrow = "1.0.0+arrow.1.2.4"
 minotaur = "2.+"
+emi = "1.1.10+1.21"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -14,6 +15,7 @@ fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_l
 fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric_kt" }
 fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 farrow = { module = "net.wiredtomato:farrow", version.ref = "farrow" }
+emi = { module = "dev.emi:emi-fabric", version.ref = "emi" }
 
 [plugins]
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

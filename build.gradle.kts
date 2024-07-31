@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    id("fabric-loom") version "1.7-SNAPSHOT"
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
     alias(libs.plugins.minotaur)
@@ -33,6 +33,8 @@ dependencies {
     modImplementation(libs.fabric.kt)
 
     modImplementation(libs.fabric.api)
+    modCompileOnly(variantOf(libs.emi) { classifier("api") })
+    modRuntimeOnly(libs.emi)
     include(modImplementation(libs.farrow.get())!!)
 }
 

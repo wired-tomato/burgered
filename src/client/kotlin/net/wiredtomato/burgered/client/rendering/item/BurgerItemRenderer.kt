@@ -58,7 +58,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
 
             matrices.pop()
-            matrices.translate(0.0, (ingredient.second.modelHeight() / 16.0) * getIngredientScale(ingredient.second), 0.0)
+            matrices.translate(0.0, (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.second), 0.0)
         }
 
         matrices.pop()
@@ -140,7 +140,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
             matrices.translate(
                 0f,
                 if (mode == ModelTransformationMode.GUI) 0f
-                else scale.y * ((8f / 16) + if (ingredient.modelHeight() == 0.0) 0.001f else 0f),
+                else scale.y * ((8f / 16) + if (ingredient.modelHeight(ingredientStack) == 0.0) 0.001f else 0f),
                 0f
             )
         }
