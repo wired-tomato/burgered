@@ -51,6 +51,15 @@ object BurgeredItems {
         )
     )
 
+    val LETTUCE = register(
+        "lettuce",
+        BurgerIngredientItem(
+            BurgerIngredientSettings()
+                .saturation(1)
+                .overSaturation(0.25)
+                .modelHeight(0.0)
+        )
+    )
 
     val BURGER = register(
         "burger",

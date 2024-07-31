@@ -90,9 +90,11 @@ object BurgerItemRenderer : DynamicItemRenderer {
         if (!transform.scale.isIdentity()) {
             matrices.scale(1 / transform.scale.x, 1 / transform.scale.y, 1 / transform.scale.z)
         }
+
         if (!transform.translation.isZeroed()) {
             matrices.translate(-transform.translation.x, -transform.translation.y, -transform.translation.z)
         }
+
         if (!transform.rotation.isZeroed()) {
             matrices.rotate(
                 Quaternionf()
@@ -102,10 +104,14 @@ object BurgerItemRenderer : DynamicItemRenderer {
                         -transform.rotation.z.toRadians()
                     )
             )
-
         }
 
-        matrices.translate(0f, if (mode == ModelTransformationMode.GUI) 0f else 8f / 16, 0f)
+        matrices.translate(
+            0f,
+            if (mode == ModelTransformationMode.GUI) 0f
+            else (8f / 16) + if (ingredient.modelHeight() == 0.0) 0.001f else 0f,
+            0f
+        )
     }
 
     fun Vector3f.isIdentity() = this.x == 1f && this.y == 1f && this.z == 1f
