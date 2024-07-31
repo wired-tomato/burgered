@@ -42,7 +42,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
             matrices.push()
             ingredientOffset(itemRenderer, matrices, mode, ingredient)
             matrices.rotate(Axis.X_POSITIVE.rotationDegrees(offsets.x))
-            matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(offsets.y))
+            if (mode != ModelTransformationMode.GUI) matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(offsets.y))
             matrices.rotate(Axis.Z_POSITIVE.rotationDegrees(offsets.z))
 
             itemRenderer.renderItem(

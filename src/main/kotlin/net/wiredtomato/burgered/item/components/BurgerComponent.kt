@@ -18,6 +18,7 @@ import net.wiredtomato.burgered.data.CommonText
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.util.group
+import java.text.DecimalFormat
 import java.util.function.Consumer
 
 data class BurgerComponent(
@@ -30,6 +31,10 @@ data class BurgerComponent(
         appender: Consumer<Text>,
         config: TooltipConfig
     ) {
+        val format = DecimalFormat("#.##")
+        appender.accept(Text.translatable(CommonText.SLOPPINESS, format.format(burgerSloppiness)))
+        appender.accept(Text.empty())
+
         appender.accept(Text.translatable(CommonText.INGREDIENTS))
         burgerIngredients.reversed().group().forEach { group ->
             appender.accept(Text.literal("${group.count}x ").append(group.value.asItem().name))
@@ -51,7 +56,7 @@ data class BurgerComponent(
     }
 
     override fun eatTime(): Float {
-        return (ingredients().size / 2f).coerceAtMost(4f)
+        return (ingredients().size / 2f).coerceAtMost(2f)
     }
 
     override fun sloppiness(): Double = burgerSloppiness
