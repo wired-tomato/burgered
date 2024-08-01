@@ -240,6 +240,19 @@
 			}
 		}
 	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [0, 37.75, 38.25],
+			"translation": [-1, 1, 0],
+			"scale": [0.6, 0.6, 0.6]
+		}
+	},
 	"groups": [
 		{
 			"name": "root",

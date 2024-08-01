@@ -63,10 +63,32 @@ class BurgeredRecipeProvider(
             .criterion(hasItem(BurgeredItems.BOTTOM_BUN), RecipesProvider.conditionsFromItem(BurgeredItems.BOTTOM_BUN))
             .offerTo(exporter)
 
+        ShapedRecipeJsonFactory.create(RecipeCategory.MISC, BurgeredItems.ESTROGEN_WAFFLE)
+            .pattern(" C ")
+            .pattern("EME")
+            .pattern("MEM")
+            .ingredient('C', ItemTags.CANDLES)
+            .ingredient('E', Items.EGG)
+            .ingredient('M', Items.MILK_BUCKET)
+            .criterion(hasItem(Items.MILK_BUCKET), RecipesProvider.conditionsFromItem(Items.MILK_BUCKET))
+            .offerTo(exporter)
+
         ShapelessRecipeJsonFactory.create(RecipeCategory.FOOD, BurgeredItems.RAW_BEEF_PATTY)
             .ingredient(Items.BEEF)
             .ingredient(ItemTags.SWORDS)
             .criterion(hasItem(Items.BEEF), RecipesProvider.conditionsFromItem(Items.BEEF))
+            .offerTo(exporter)
+
+        ShapelessRecipeJsonFactory.create(RecipeCategory.FOOD, BurgeredItems.PICKLED_BEETS)
+            .ingredient(Items.SEA_PICKLE)
+            .ingredient(Items.BEETROOT)
+            .criterion(hasItem(Items.BEETROOT), RecipesProvider.conditionsFromItem(Items.BEETROOT))
+            .offerTo(exporter)
+
+        ShapelessRecipeJsonFactory.create(RecipeCategory.FOOD, BurgeredItems.LETTUCE)
+            .ingredient(Items.SEA_PICKLE)
+            .ingredient(ItemTags.SWORDS)
+            .criterion(hasItem(Items.SEA_PICKLE), RecipesProvider.conditionsFromItem(Items.SEA_PICKLE))
             .offerTo(exporter)
 
         RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.TOP_BUN, Items.BREAD)
@@ -80,6 +102,17 @@ class BurgeredRecipeProvider(
             100,
             hasItem(BurgeredItems.RAW_BEEF_PATTY),
             RecipesProvider.conditionsFromItem(BurgeredItems.RAW_BEEF_PATTY)
+        )
+
+        grillingRecipe(
+            exporter,
+            Ingredient.ofItems(Items.MILK_BUCKET),
+            CookingCategory.FOOD,
+            BurgeredItems.CHEESE_SLICE.defaultStack,
+            25f,
+            100,
+            hasItem(Items.MILK_BUCKET),
+            RecipesProvider.conditionsFromItem(Items.MILK_BUCKET)
         )
     }
 
