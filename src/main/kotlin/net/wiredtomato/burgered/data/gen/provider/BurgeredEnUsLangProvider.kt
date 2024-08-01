@@ -38,8 +38,14 @@ class BurgeredEnUsLangProvider(
 
         translationBuilder.add("emi.category.burgered.grilling", "Grilling")
 
-        translationBuilder.add("${Burgered.MOD_ID}.midnightlib.maxRenderedBurgerIngredients", "Max Rendered Burger Ingredients")
-        translationBuilder.add("${Burgered.MOD_ID}.midnightlib.maxRenderedBurgerIngredients.tooltip", "Maximum number of ingredients to render per burger.")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxRenderedBurgerIngredients", "Max Rendered Burger Ingredients")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxRenderedBurgerIngredients.tooltip", "Maximum number of ingredients to render per burger.")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationX", "Max Sloppiness Rotation X")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationX.tooltip", "Maximum amount to rotate burger ingredients along X-axix (in degrees).")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationY", "Max Sloppiness Rotation Y")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationY.tooltip", "Maximum amount to rotate burger ingredients along Y-axix (in degrees).")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationZ", "Max Sloppiness Rotation Z")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationZ.tooltip", "Maximum amount to rotate burger ingredients along Z-axix (in degrees).")
     }
 
     private fun genLang(identifier: Identifier): String =

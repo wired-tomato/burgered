@@ -24,6 +24,7 @@ import kotlin.random.Random
 
 object BurgerItemRenderer : DynamicItemRenderer {
     private val sloppinessCache: MutableMap<Triple<Double, Identifier, Int>, RotationOffsets> = mutableMapOf()
+    private var lastMaxRot = Vector3f()
 
     override fun render(
         stack: ItemStack,
@@ -33,6 +34,18 @@ object BurgerItemRenderer : DynamicItemRenderer {
         light: Int,
         overlay: Int
     ) {
+        val maxRot = Vector3f(
+            BurgeredClientConfig.maxSloppinessRotationX,
+            BurgeredClientConfig.maxSloppinessRotationY,
+            BurgeredClientConfig.maxSloppinessRotationZ
+        )
+
+        if (lastMaxRot != maxRot) {
+            sloppinessCache.clear()
+        }
+
+        lastMaxRot = maxRot
+
         matrices.push()
         val client = MinecraftClient.getInstance()
         val itemRenderer = client.itemRenderer
@@ -75,9 +88,12 @@ object BurgerItemRenderer : DynamicItemRenderer {
 
         return sloppinessCache.computeIfAbsent(Triple(sloppiness, ingredient.id(), index)) {
             val random = Random(RandomSeed.generateUniqueSeed())
-            val degreesX = random.nextDouble(-10.0 * sloppiness, 10.0 * sloppiness).toFloat()
-            val degreesY = random.nextDouble(-90.0 * sloppiness, 90.0 * sloppiness).toFloat()
-            val degreesZ = random.nextDouble(-10.0 * sloppiness, 10.0 * sloppiness).toFloat()
+            val rotX = BurgeredClientConfig.maxSloppinessRotationX
+            val rotY = BurgeredClientConfig.maxSloppinessRotationY
+            val rotZ = BurgeredClientConfig.maxSloppinessRotationZ
+            val degreesX = random.nextDouble(-rotX * sloppiness, rotX * sloppiness).toFloat()
+            val degreesY = random.nextDouble(-rotY * sloppiness, rotY * sloppiness).toFloat()
+            val degreesZ = random.nextDouble(-rotZ * sloppiness, rotZ * sloppiness).toFloat()
 
             RotationOffsets(degreesX, degreesY, degreesZ)
         }
