@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.HorizontalFacingBlock
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
@@ -15,6 +16,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.recipe.RecipeHolder
 import net.minecraft.recipe.SingleRecipeInput
 import net.minecraft.registry.HolderLookup
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.collection.DefaultedList
@@ -22,10 +24,10 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.init.BurgeredBlockEntities
 import net.wiredtomato.burgered.init.BurgeredRecipes
 import net.wiredtomato.burgered.recipe.GrillingRecipe
+import kotlin.math.roundToInt
 
 class GrillEntity(
     pos: BlockPos,
@@ -44,20 +46,21 @@ class GrillEntity(
         val stack = player.getStackInHand(Hand.MAIN_HAND)
 
         val hitPos = hitResult.pos
-        val northSouth = when (state.get(HorizontalFacingBlock.FACING)) {
-            Direction.NORTH, Direction.SOUTH -> true
-            else -> false
-        }
 
         val center = pos.ofCenter()
-        return if (northSouth) {
-            if (hitPos.x > center.x) {
-                getOrGiveItem(world, player, stack, 0)
-            } else getOrGiveItem(world, player, stack, 1)
-        } else {
-            if (hitPos.z < center.z) {
-                getOrGiveItem(world, player, stack, 0)
-            } else getOrGiveItem(world, player, stack, 1)
+        return when (state.get(HorizontalFacingBlock.FACING)) {
+            Direction.NORTH, Direction.SOUTH -> {
+                if (hitPos.x > center.x) {
+                    getOrGiveItem(world, player, stack, 0)
+                } else getOrGiveItem(world, player, stack, 1)
+            }
+            Direction.EAST, Direction.WEST -> {
+                if (hitPos.z < center.z) {
+                    getOrGiveItem(world, player, stack, 0)
+                } else getOrGiveItem(world, player, stack, 1)
+            }
+
+            else -> ActionResult.PASS
         }
     }
 
@@ -66,7 +69,6 @@ class GrillEntity(
         if (!inventory[slot].isEmpty) {
             player.giveItemStack(inventory[slot])
             inventory[slot] = ItemStack.EMPTY
-            Burgered.LOGGER.info("gave")
             return ActionResult.SUCCESS
         }
 
@@ -124,6 +126,10 @@ class GrillEntity(
                     val result = recipe.craft(recipeInput, world.registryManager)
                     inventory[i] = result
                     cookTimes[i] = 0
+                    if (world is ServerWorld) {
+                        val pos = blockPos.ofCenter()
+                        ExperienceOrbEntity.spawn(world, pos, recipe.experience.roundToInt())
+                    }
                 }
             }
         }
