@@ -7,13 +7,16 @@ import net.minecraft.registry.Registries
 import net.wiredtomato.burgered.init.BurgeredItems
 
 data class VanillaBurgerIngredientComponent(
-    val item: Item
+    val item: Item,
+    private var dirty: Boolean = true
 ) {
+    fun isDirty() = dirty
 
     companion object {
         val CODEC: Codec<VanillaBurgerIngredientComponent> = RecordCodecBuilder.create { builder ->
             builder.group(
-                Registries.ITEM.codec.fieldOf("item").forGetter(VanillaBurgerIngredientComponent::item)
+                Registries.ITEM.codec.fieldOf("item").forGetter(VanillaBurgerIngredientComponent::item),
+                Codec.BOOL.fieldOf("dirty").orElse(true).forGetter(VanillaBurgerIngredientComponent::dirty)
             ).apply(builder, ::VanillaBurgerIngredientComponent)
         }
 

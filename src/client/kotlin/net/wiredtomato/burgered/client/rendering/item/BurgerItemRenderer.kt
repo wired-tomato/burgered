@@ -13,6 +13,7 @@ import net.minecraft.util.math.Axis
 import net.minecraft.util.random.RandomSeed
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
+import net.wiredtomato.burgered.client.config.BurgeredClientConfig
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
@@ -39,6 +40,8 @@ object BurgerItemRenderer : DynamicItemRenderer {
 
         itemOffsets(matrices, mode)
         burger.ingredients().forEachIndexed { i, ingredient ->
+            if (i >= BurgeredClientConfig.maxRenderedBurgerIngredients) return@forEachIndexed
+
             val offsets = sloppinessOffset(burger, ingredient.second, i)
             matrices.push()
             ingredientOffset(itemRenderer, matrices, mode, ingredient.first, ingredient.second)

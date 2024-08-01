@@ -38,6 +38,11 @@
 				"value": "net.wiredtomato.burgered.client.compat.emi.EMIPlugin",
 				"adapter": "kotlin"
 			}
+		],
+		"modmenu": [
+			{
+				"value": "net.wiredtomato.burgered.client.compat.modmenu.ModMenuEntrypoint"
+			}
 		]
 	},
 	"mixins": [

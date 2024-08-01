@@ -35,7 +35,9 @@ dependencies {
     modImplementation(libs.fabric.api)
     modCompileOnly(variantOf(libs.emi) { classifier("api") })
     modRuntimeOnly(libs.emi)
-    include(modImplementation(libs.farrow.get())!!)
+    modImplementation(libs.modmenu)
+    modImplementation(include(libs.farrow.get())!!)
+    modImplementation(include(libs.midnightlib.get())!!)
 }
 
 loom {

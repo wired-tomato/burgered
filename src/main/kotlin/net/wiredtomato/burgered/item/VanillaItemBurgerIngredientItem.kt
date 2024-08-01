@@ -34,18 +34,23 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : Burg
     }
 
     override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, slot: Int, selected: Boolean) {
-        val effects = statusEffects(stack)
-        stack.set(
-            DataComponentTypes.FOOD,
-            FoodComponent(
-                saturation(stack),
-                overSaturation(stack).toFloat(),
-                effects.isNotEmpty(),
-                0.5f,
-                Optional.empty(),
-                effects,
+        val component = stack.getOrDefault(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent.DEFAULT)
+        if (component.isDirty()) {
+            val effects = statusEffects(stack)
+            stack.set(
+                DataComponentTypes.FOOD,
+                FoodComponent(
+                    saturation(stack),
+                    overSaturation(stack).toFloat(),
+                    effects.isNotEmpty(),
+                    0.5f,
+                    Optional.empty(),
+                    effects,
+                )
             )
-        )
+
+            stack.set(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent(component.item, false))
+        }
     }
 
     fun findFirstMatchingVanillaItem(stack: ItemStack): BurgerStackable {

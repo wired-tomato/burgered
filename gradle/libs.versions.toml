@@ -7,6 +7,8 @@ fabric_api = "0.100.7+1.21"
 farrow = "1.0.0+arrow.1.2.4"
 minotaur = "2.+"
 emi = "1.1.10+1.21"
+midnightlib = "1.5.7-fabric"
+modmenu = "11.0.1"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -16,6 +18,8 @@ fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fab
 fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 farrow = { module = "net.wiredtomato:farrow", version.ref = "farrow" }
 emi = { module = "dev.emi:emi-fabric", version.ref = "emi" }
+midnightlib = { module = "maven.modrinth:midnightlib", version.ref = "midnightlib" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 
 [plugins]
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

@@ -37,6 +37,9 @@ class BurgeredEnUsLangProvider(
         translationBuilder.add(CommonText.SLOPPINESS, "Sloppiness: %s")
 
         translationBuilder.add("emi.category.burgered.grilling", "Grilling")
+
+        translationBuilder.add("${Burgered.MOD_ID}.midnightlib.maxRenderedBurgerIngredients", "Max Rendered Burger Ingredients")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightlib.maxRenderedBurgerIngredients.tooltip", "Maximum number of ingredients to render per burger.")
     }
 
     private fun genLang(identifier: Identifier): String =

@@ -15,6 +15,7 @@ import net.minecraft.recipe.CookingCategory
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeCategory
 import net.minecraft.registry.HolderLookup
+import net.minecraft.registry.tag.ItemTags
 import net.minecraft.util.Identifier
 import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.init.BurgeredItems
@@ -44,6 +45,29 @@ class BurgeredRecipeProvider(
             .ingredient('B', BurgeredItems.BURGER)
             .criterion(hasItem(BurgeredItems.BOOK_OF_BURGERS), RecipesProvider.conditionsFromItem(BurgeredItems.BOOK_OF_BURGERS))
             .offerTo(exporter, Burgered.id("book_of_burgers_duplicate"))
+
+        ShapedRecipeJsonFactory.create(RecipeCategory.MISC, BurgeredItems.BURGER_STACKER)
+            .pattern(" F ")
+            .pattern(" F ")
+            .pattern("SSS")
+            .ingredient('F', ItemTags.FENCES)
+            .ingredient('S', ItemTags.SLABS)
+            .criterion(hasItem(BurgeredItems.BOTTOM_BUN), RecipesProvider.conditionsFromItem(BurgeredItems.BOTTOM_BUN))
+            .offerTo(exporter)
+
+        ShapedRecipeJsonFactory.create(RecipeCategory.MISC, BurgeredItems.GRILL)
+            .pattern("III")
+            .pattern("I I")
+            .pattern("I I")
+            .ingredient('I', Items.IRON_BARS)
+            .criterion(hasItem(BurgeredItems.BOTTOM_BUN), RecipesProvider.conditionsFromItem(BurgeredItems.BOTTOM_BUN))
+            .offerTo(exporter)
+
+        ShapelessRecipeJsonFactory.create(RecipeCategory.FOOD, BurgeredItems.RAW_BEEF_PATTY)
+            .ingredient(Items.BEEF)
+            .ingredient(ItemTags.SWORDS)
+            .criterion(hasItem(Items.BEEF), RecipesProvider.conditionsFromItem(Items.BEEF))
+            .offerTo(exporter)
 
         RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.TOP_BUN, Items.BREAD)
         RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.BOTTOM_BUN, Items.BREAD)

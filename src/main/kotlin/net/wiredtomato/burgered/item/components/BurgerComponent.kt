@@ -26,6 +26,7 @@ import java.util.function.Consumer
 data class BurgerComponent(
     private val burgerIngredients: List<Pair<ItemStack, BurgerIngredient>> = listOf(),
     private val burgerSloppiness: Double = 0.0,
+    private var dirty: Boolean = true
 ) : Burger, TooltipAppender {
 
     override fun appendToTooltip(
@@ -66,12 +67,15 @@ data class BurgerComponent(
         ingredients().forEach { it.second.onEat(entity, world, stack, component) }
     }
 
+    fun isDirty() = dirty
+
     companion object : Burger.Modifier<BurgerComponent> {
         val INGREDIENT_PAIR_CODEC: Codec<Pair<ItemStack, BurgerIngredient>> = ItemStack.CODEC.xmap({ Pair(it, fromItem(it.item)) }, { it.first })
         val CODEC: Codec<BurgerComponent> = RecordCodecBuilder.create { builder ->
             builder.group(
                 INGREDIENT_PAIR_CODEC.listOf().fieldOf("ingredients").forGetter(BurgerComponent::burgerIngredients),
                 Codec.DOUBLE.fieldOf("sloppiness").orElse(0.0).forGetter(BurgerComponent::burgerSloppiness),
+                Codec.BOOL.fieldOf("dirty").orElse(true).forGetter(BurgerComponent::dirty)
             ).apply(builder, ::BurgerComponent)
         }
 
@@ -98,7 +102,7 @@ data class BurgerComponent(
                 none()
             } else Text.translatable(CommonText.CANT_BE_PUT_ON_BURGER, ingredient.asItem().name).some()
 
-            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness()))
+            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness(), true))
 
             return result
         }
@@ -106,18 +110,18 @@ data class BurgerComponent(
         override fun removeIngredient(burger: BurgerComponent, stack: ItemStack, ingredientStack: ItemStack, ingredient: BurgerIngredient) {
             val ingredients = burger.ingredients().toMutableList()
             ingredients.remove(ingredientStack to ingredient)
-            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness()))
+            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness(), true))
         }
 
         override fun removeLastIngredient(burger: BurgerComponent, stack: ItemStack) {
             val ingredients = burger.ingredients().toMutableList()
             if (ingredients.isEmpty()) return
             ingredients.removeLast()
-            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness()))
+            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(ingredients, burger.sloppiness(), true))
         }
 
         override fun setSloppiness(burger: BurgerComponent, stack: ItemStack, sloppiness: Double) {
-            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(burger.burgerIngredients.toMutableList(), sloppiness))
+            stack.set(BurgeredDataComponents.BURGER, BurgerComponent(burger.burgerIngredients.toMutableList(), sloppiness, true))
         }
     }
 }

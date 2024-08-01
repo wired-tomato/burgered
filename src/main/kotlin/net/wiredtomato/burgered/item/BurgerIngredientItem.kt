@@ -1,6 +1,9 @@
 package net.wiredtomato.burgered.item
 
+import net.minecraft.component.DataComponentMap
 import net.minecraft.component.DataComponentType
+import net.minecraft.component.DataComponentTypes
+import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.FoodComponent
@@ -10,6 +13,9 @@ import net.minecraft.world.World
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
+import net.wiredtomato.burgered.init.BurgeredDataComponents
+import net.wiredtomato.burgered.item.components.DirtyComponent
+import java.util.*
 
 open class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(settings), BurgerIngredient {
     private val saturation = settings.saturation()
@@ -26,6 +32,31 @@ open class BurgerIngredientItem(settings: BurgerIngredientSettings) : Item(setti
     override fun modelHeight(stack: ItemStack): Double = modelHeight
     override fun statusEffects(stack: ItemStack): List<StatusEffectEntry> = statusEffects
     override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) { }
+
+    override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, slot: Int, selected: Boolean) {
+        val component = stack.getOrDefault(BurgeredDataComponents.DIRTY, DirtyComponent(true))
+        if (component.dirty) {
+            val effects = statusEffects(stack)
+            val foodComponent = FoodComponent(
+                saturation(stack),
+                overSaturation(stack).toFloat(),
+                effects.isNotEmpty(),
+                0.5f,
+                Optional.empty(),
+                effects
+            )
+
+            stack.set(DataComponentTypes.FOOD, foodComponent)
+            stack.set(BurgeredDataComponents.DIRTY, DirtyComponent(false))
+        }
+    }
+
+    override fun getComponents(): DataComponentMap {
+        val builder = DataComponentMap.builder()
+        builder.putAll(super.getComponents())
+        builder.put(BurgeredDataComponents.DIRTY, DirtyComponent(true))
+        return builder.build()
+    }
 
     class BurgerIngredientSettings : Settings() {
         private var saturation = 0
