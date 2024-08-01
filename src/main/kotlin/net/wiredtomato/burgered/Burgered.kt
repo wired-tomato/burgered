@@ -1,15 +1,12 @@
 package net.wiredtomato.burgered
 
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
 import net.minecraft.resource.ResourceType
 import net.minecraft.util.Identifier
 import net.wiredtomato.burgered.api.event.LivingEntityEvents
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.data.burger.BurgerStackablesLoader
 import net.wiredtomato.burgered.init.*
-import net.wiredtomato.burgered.recipe.VanillaBurgerIngredientRecipe
 import org.slf4j.LoggerFactory
 
 object Burgered {
@@ -24,6 +21,7 @@ object Burgered {
         BurgeredDataComponents
         BurgeredTabs
         BurgeredEatEvents
+        BurgeredRecipes
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(BurgerStackablesLoader)
 
@@ -36,8 +34,6 @@ object Burgered {
             }
             burger.onEat(entity, world, stack, component)
         }
-
-        Registry.register(Registries.RECIPE_SERIALIZER, id("vanilla_burger_ingredient"), VanillaBurgerIngredientRecipe.SERIALIZER)
     }
 
     fun id(path: String) = Identifier.of(MOD_ID, path)

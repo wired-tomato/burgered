@@ -88,13 +88,14 @@ publishing {
     publications.create<MavenPublication>(modid) {
         groupId = project.group.toString()
         artifactId = project.name.lowercase()
-        version = project.version.toString()
+        val projectVersion = project.version.toString()
+        version = if (projectVersion.contains("beta")) "$projectVersion-SNAPSHOT" else projectVersion
 
         from(components["java"])
     }
 
     repositories {
-        maven("https://maven.wiredtomato.net/releases") {
+        maven("https://maven.wiredtomato.net/snapshots") {
             name = "wtRepo"
             credentials {
                 username = System.getenv("MAVEN_USERNAME")

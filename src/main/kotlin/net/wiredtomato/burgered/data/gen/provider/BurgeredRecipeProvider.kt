@@ -2,18 +2,24 @@ package net.wiredtomato.burgered.data.gen.provider
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
+import net.minecraft.advancement.AdvancementCriterion
+import net.minecraft.advancement.AdvancementRequirements
+import net.minecraft.advancement.AdvancementRewards
+import net.minecraft.advancement.criterion.RecipeUnlockedCriterionTrigger
 import net.minecraft.data.server.RecipesProvider
-import net.minecraft.data.server.recipe.RecipeExporter
-import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonFactory
-import net.minecraft.data.server.recipe.TransformSmithingRecipeJsonFactory
+import net.minecraft.data.server.recipe.*
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.recipe.CookingCategory
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeCategory
 import net.minecraft.registry.HolderLookup
+import net.minecraft.util.Identifier
 import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.init.BurgeredItems
+import net.wiredtomato.burgered.recipe.GrillingRecipe
+import net.wiredtomato.burgered.util.id
 import java.util.concurrent.CompletableFuture
 
 class BurgeredRecipeProvider(
@@ -29,7 +35,7 @@ class BurgeredRecipeProvider(
             .criterion(hasItem(Items.BOOK), RecipesProvider.conditionsFromItem(Items.BOOK))
             .offerTo(exporter)
 
-        ShapedRecipeJsonFactory.create(RecipeCategory.MISC, BurgeredItems.BOOK_OF_BURGERS, 8)
+        ShapedRecipeJsonFactory.create(RecipeCategory.MISC, BurgeredItems.BOOK_OF_BURGERS, 32)
             .pattern("DbD")
             .pattern("DBD")
             .pattern("DDD")
@@ -41,7 +47,39 @@ class BurgeredRecipeProvider(
 
         RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.TOP_BUN, Items.BREAD)
         RecipesProvider.createStonecuttingRecipe(exporter, RecipeCategory.FOOD, BurgeredItems.BOTTOM_BUN, Items.BREAD)
+        grillingRecipe(
+            exporter,
+            Ingredient.ofItems(BurgeredItems.RAW_BEEF_PATTY),
+            CookingCategory.FOOD,
+            BurgeredItems.BEEF_PATTY.defaultStack,
+            25f,
+            100,
+            hasItem(BurgeredItems.RAW_BEEF_PATTY),
+            RecipesProvider.conditionsFromItem(BurgeredItems.RAW_BEEF_PATTY)
+        )
     }
+
+    fun grillingRecipe(
+        exporter: RecipeExporter,
+        ingredient: Ingredient,
+        category: CookingCategory,
+        result: ItemStack,
+        experience: Float,
+        cookingTime: Int,
+        criterionName: String,
+        criterion: AdvancementCriterion<*>,
+        recipeId: Identifier = result.item.id
+    ) {
+        val recipe = GrillingRecipe("", category, ingredient, result, experience, cookingTime)
+        val builder = exporter.accept().putCriteria("has_the_recipe", RecipeUnlockedCriterionTrigger.create(recipeId)).rewards(
+            AdvancementRewards.Builder.recipe(recipeId)
+        ).merger(AdvancementRequirements.RequirementMerger.ANY)
+        builder.putCriteria(criterionName, criterion)
+
+        exporter.accept(recipeId, recipe, builder.build(recipeId.withPrefix("recipes/" + category.asString() + "/")))
+    }
+
+    fun CookingRecipeJsonFactory.hasItem(item: Item) = this.criterion(RecipesProvider.hasItem(item), RecipesProvider.conditionsFromItem(item))
 
     fun burgerSmithingRecipe(base: Item, result: Item): TransformSmithingRecipeJsonFactory {
         return TransformSmithingRecipeJsonFactory(

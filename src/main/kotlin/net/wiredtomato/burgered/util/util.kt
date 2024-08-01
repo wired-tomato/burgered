@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.MapCodec.MapCodecCodec
 import io.netty.handler.codec.DecoderException
 import io.netty.handler.codec.EncoderException
+import net.minecraft.item.Item
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtNull
 import net.minecraft.nbt.NbtOps
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NbtTagSizeTracker
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.network.RegistryByteBuf
 import net.minecraft.network.codec.PacketCodec
+import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.tag.TagKey
@@ -92,3 +94,5 @@ fun nbtElement(sizeTracker: Supplier<NbtTagSizeTracker>): PacketCodec<RegistryBy
 }
 
 data class Group<T>(val value: T, var count: Int)
+
+val Item.id get() = Registries.ITEM.getId(this)

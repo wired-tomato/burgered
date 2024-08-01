@@ -128,6 +128,7 @@ object BurgeredItems {
     )
 
     val BURGER_STACKER = register("burger_stacker", BlockItem(BurgeredBlocks.BURGER_STACKER, Item.Settings()))
+    val GRILL = register("grill", BlockItem(BurgeredBlocks.GRILL, Item.Settings()))
 
     fun <T : Item> register(name: String, item: T): T {
         return Registry.register(Registries.ITEM, Burgered.id(name), item)

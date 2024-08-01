@@ -17,7 +17,7 @@ object BurgeredTabs {
     fun tabESB(displayParameters: DisplayParameters): Set<ItemConvertible> {
         return Registries.ITEM.holders()
             .toList()
-            .filter { it.registryKey.value.namespace == Burgered.MOD_ID }
+            .filter { it.registryKey.value.namespace == Burgered.MOD_ID && it.value() != BurgeredItems.CUSTOM_BURGER_INGREDIENT }
             .map { it.value() }
             .toSet()
     }

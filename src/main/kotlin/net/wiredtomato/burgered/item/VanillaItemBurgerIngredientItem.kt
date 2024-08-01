@@ -8,11 +8,11 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
-import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.data.burger.BurgerStackable
 import net.wiredtomato.burgered.data.burger.BurgerStackables
 import net.wiredtomato.burgered.init.BurgeredDataComponents
+import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.item.components.VanillaBurgerIngredientComponent
 import java.util.Optional
 
@@ -49,7 +49,10 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : Burg
     }
 
     fun findFirstMatchingVanillaItem(stack: ItemStack): BurgerStackable {
-        return BurgerStackables.find { it.item == getVanillaItem(stack) }!!
+        val vanillaItem = getVanillaItem(stack)
+        return if (vanillaItem == BurgeredItems.CUSTOM_BURGER_INGREDIENT) {
+            BurgerStackable(BurgeredItems.CUSTOM_BURGER_INGREDIENT, 0, 0f)
+        } else BurgerStackables.find { it.item == vanillaItem }!!
     }
 
     override fun getName(stack: ItemStack): Text {

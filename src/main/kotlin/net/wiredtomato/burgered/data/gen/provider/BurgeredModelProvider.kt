@@ -15,6 +15,7 @@ import java.util.*
 class BurgeredModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockStateModelGenerator) = with(blockStateModelGenerator) {
         registerSimpleState(BurgeredBlocks.BURGER_STACKER)
+        registerNorthDefaultHorizontalRotation(BurgeredBlocks.GRILL)
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerator) = with(itemModelGenerator) {

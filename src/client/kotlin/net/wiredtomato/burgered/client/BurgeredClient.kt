@@ -3,6 +3,7 @@ package net.wiredtomato.burgered.client
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.wiredtomato.burgered.client.rendering.block.BurgerStackerEntityRenderer
+import net.wiredtomato.burgered.client.rendering.block.GrillEntityRenderer
 import net.wiredtomato.burgered.client.rendering.item.BurgerItemRenderer
 import net.wiredtomato.burgered.client.rendering.item.VanillaIngredientRenderer
 import net.wiredtomato.burgered.init.BurgeredBlockEntities
@@ -13,5 +14,6 @@ object BurgeredClient {
         BuiltinItemRendererRegistry.INSTANCE.register(BurgeredItems.BURGER, BurgerItemRenderer)
         BuiltinItemRendererRegistry.INSTANCE.register(BurgeredItems.VANILLA_INGREDIENT, VanillaIngredientRenderer)
         BlockEntityRendererFactories.register(BurgeredBlockEntities.BURGER_STACKER, ::BurgerStackerEntityRenderer)
+        BlockEntityRendererFactories.register(BurgeredBlockEntities.GRILL, ::GrillEntityRenderer)
     }
 }
