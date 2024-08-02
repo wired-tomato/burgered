@@ -2,12 +2,11 @@ package net.wiredtomato.burgered.item.components
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.item.Item
-import net.minecraft.registry.Registries
+import net.minecraft.item.ItemStack
 import net.wiredtomato.burgered.init.BurgeredItems
 
 data class VanillaBurgerIngredientComponent(
-    val item: Item,
+    val stack: ItemStack,
     private var dirty: Boolean = true
 ) {
     fun isDirty() = dirty
@@ -15,11 +14,11 @@ data class VanillaBurgerIngredientComponent(
     companion object {
         val CODEC: Codec<VanillaBurgerIngredientComponent> = RecordCodecBuilder.create { builder ->
             builder.group(
-                Registries.ITEM.codec.fieldOf("item").forGetter(VanillaBurgerIngredientComponent::item),
+                ItemStack.CODEC.fieldOf("stack").orElse(BurgeredItems.CUSTOM_BURGER_INGREDIENT.defaultStack).forGetter(VanillaBurgerIngredientComponent::stack),
                 Codec.BOOL.fieldOf("dirty").orElse(true).forGetter(VanillaBurgerIngredientComponent::dirty)
             ).apply(builder, ::VanillaBurgerIngredientComponent)
         }
 
-        val DEFAULT = VanillaBurgerIngredientComponent(BurgeredItems.CUSTOM_BURGER_INGREDIENT)
+        val DEFAULT = VanillaBurgerIngredientComponent(BurgeredItems.CUSTOM_BURGER_INGREDIENT.defaultStack)
     }
 }

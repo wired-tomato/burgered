@@ -20,13 +20,13 @@ object VanillaIngredientRenderer : DynamicItemRenderer {
         matrices.push()
         val item = stack.item
         if (item !is VanillaItemBurgerIngredientItem) return
-        val renderItem = item.getVanillaItem(stack)
+        val renderStack = item.getVanillaStack(stack)
 
         val client = MinecraftClient.getInstance()
         val itemRenderer = client.itemRenderer
         BurgerItemRenderer.itemOffsets(matrices, mode)
         itemRenderer.renderItem(
-            renderItem.defaultStack,
+            renderStack,
             mode,
             light,
             overlay,

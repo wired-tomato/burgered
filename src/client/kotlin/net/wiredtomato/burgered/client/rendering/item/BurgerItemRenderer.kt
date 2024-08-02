@@ -34,13 +34,13 @@ object BurgerItemRenderer : DynamicItemRenderer {
         light: Int,
         overlay: Int
     ) {
+        val newMode = if (BurgeredClientConfig.renderNoTransform) ModelTransformationMode.NONE else mode
+
         val maxRot = Vector3f(
             BurgeredClientConfig.maxSloppinessRotationX,
             BurgeredClientConfig.maxSloppinessRotationY,
             BurgeredClientConfig.maxSloppinessRotationZ
         )
-
-        val newMode = if (BurgeredClientConfig.renderNoTransform) ModelTransformationMode.NONE else mode
 
         if (lastMaxRot != maxRot) {
             sloppinessCache.clear()
@@ -114,7 +114,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
         ingredient: BurgerIngredient
     ) {
         val model = if (ingredient is VanillaItemBurgerIngredientItem) {
-            itemRenderer.models.getModel(ingredient.getVanillaItem(ingredientStack)) ?: return
+            itemRenderer.models.getModel(ingredient.getVanillaStack(ingredientStack)) ?: return
         } else itemRenderer.models.getModel(ingredient.asItem()) ?: return
 
         val transform = model.transformation.getTransformation(mode)
@@ -143,6 +143,9 @@ object BurgerItemRenderer : DynamicItemRenderer {
             matrices.scale(0.5f, 0.5f, 0.5f)
             matrices.translate(-0.03, 0.035, 0.03)
 
+            if (originalMode == ModelTransformationMode.GUI && mode != ModelTransformationMode.GUI) {
+                matrices.translate(0.0, -1.0, 0.0)
+            }
 
             when (mode) {
                 ModelTransformationMode.GROUND -> {

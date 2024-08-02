@@ -4,7 +4,6 @@ import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.FoodComponent
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
@@ -14,7 +13,7 @@ import net.wiredtomato.burgered.data.burger.BurgerStackables
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.item.components.VanillaBurgerIngredientComponent
-import java.util.Optional
+import java.util.*
 
 class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : BurgerIngredientItem(settings) {
     override fun saturation(stack: ItemStack): Int {
@@ -49,23 +48,23 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : Burg
                 )
             )
 
-            stack.set(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent(component.item, false))
+            stack.set(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent(component.stack, false))
         }
     }
 
     fun findFirstMatchingVanillaItem(stack: ItemStack): BurgerStackable {
-        val vanillaItem = getVanillaItem(stack)
-        return if (vanillaItem == BurgeredItems.CUSTOM_BURGER_INGREDIENT) {
+        val vanillaItem = getVanillaStack(stack)
+        return if (vanillaItem.isOf(BurgeredItems.CUSTOM_BURGER_INGREDIENT)) {
             BurgerStackable(BurgeredItems.CUSTOM_BURGER_INGREDIENT, 0, 0f)
-        } else BurgerStackables.find { it.item == vanillaItem }!!
+        } else BurgerStackables.find { it.item == vanillaItem.item }!!
     }
 
     override fun getName(stack: ItemStack): Text {
         val option: Optional<Text> = findFirstMatchingVanillaItem(stack).customName.map { Text.translatable(it) }
-        return option.orElse(getVanillaItem(stack).name)
+        return option.orElse(getVanillaStack(stack).name)
     }
 
-    fun getVanillaItem(stack: ItemStack): Item {
-        return stack.getOrDefault(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent.DEFAULT).item
+    fun getVanillaStack(stack: ItemStack): ItemStack {
+        return stack.getOrDefault(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent.DEFAULT).stack
     }
 }

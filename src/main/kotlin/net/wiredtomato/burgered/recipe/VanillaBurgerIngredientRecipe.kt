@@ -31,7 +31,7 @@ class VanillaBurgerIngredientRecipe(
 
     override fun craft(input: SmithingRecipeInput, provider: HolderLookup.Provider): ItemStack {
         val output = BurgeredItems.VANILLA_INGREDIENT.defaultStack
-        output.set(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent(input.base.item))
+        output.set(BurgeredDataComponents.VANILLA_BURGER_INGREDIENT, VanillaBurgerIngredientComponent(input.base.copy()))
         return output
     }
 
