@@ -6,12 +6,11 @@ import dev.emi.emi.api.stack.EmiIngredient
 import dev.emi.emi.api.stack.EmiStack
 import dev.emi.emi.api.widget.WidgetHolder
 import net.minecraft.recipe.RecipeHolder
-import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.recipe.GrillingRecipe
 
 class GrillingEmiRecipe(
     holder: RecipeHolder<GrillingRecipe>
-) : BasicEmiRecipe(EMIPlugin.GRILLING_RECIPE_CATEGORY, Burgered.id("grilling_recipe"), 112, 18) {
+) : BasicEmiRecipe(EMIPlugin.GRILLING_RECIPE_CATEGORY, holder.id, 112, 18) {
     init {
         inputs.add(EmiIngredient.of(holder.value.ingredients.first()))
         outputs.add(EmiStack.of(holder.value.result))

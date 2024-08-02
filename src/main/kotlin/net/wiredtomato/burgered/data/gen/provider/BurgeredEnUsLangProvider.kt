@@ -46,6 +46,9 @@ class BurgeredEnUsLangProvider(
         translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationY.tooltip", "Maximum amount to rotate burger ingredients along Y-axix (in degrees).")
         translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationZ", "Max Sloppiness Rotation Z")
         translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.maxSloppinessRotationZ.tooltip", "Maximum amount to rotate burger ingredients along Z-axix (in degrees).")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.renderNoTransform", "Always Render With no Default Item Transformations")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.renderNoTransform.tooltip", "Always render burgers with no default item transformations.\nDISABLING THIS MAY CAUSE VISUAL ARTIFACTING WITH SOME INGREDIENTS AND ADDON MODS!!!")
+        translationBuilder.add("${Burgered.MOD_ID}.midnightconfig.category.rendering", "Rendering")
     }
 
     private fun genLang(identifier: Identifier): String =

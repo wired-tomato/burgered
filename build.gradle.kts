@@ -86,6 +86,19 @@ tasks {
     }
 }
 
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("burgered")
+    versionNumber.set(project.version.toString())
+    versionType.set("beta")
+    uploadFile.set(tasks.remapJar)
+    gameVersions.addAll("1.21")
+    loaders.addAll("fabric")
+    dependencies {
+        embedded.project("farrow", "midnightlib")
+    }
+}
+
 publishing {
     publications.create<MavenPublication>(modid) {
         groupId = project.group.toString()

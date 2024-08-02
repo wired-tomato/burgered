@@ -40,6 +40,8 @@ object BurgerItemRenderer : DynamicItemRenderer {
             BurgeredClientConfig.maxSloppinessRotationZ
         )
 
+        val newMode = if (BurgeredClientConfig.renderNoTransform) ModelTransformationMode.NONE else mode
+
         if (lastMaxRot != maxRot) {
             sloppinessCache.clear()
         }
@@ -51,20 +53,20 @@ object BurgerItemRenderer : DynamicItemRenderer {
         val itemRenderer = client.itemRenderer
         val burger = stack.getOrDefault(BurgeredDataComponents.BURGER, BurgerComponent())
 
-        itemOffsets(matrices, mode)
+        itemOffsets(matrices, newMode)
         burger.ingredients().forEachIndexed { i, ingredient ->
             if (i >= BurgeredClientConfig.maxRenderedBurgerIngredients) return@forEachIndexed
 
             val offsets = sloppinessOffset(burger, ingredient.second, i)
             matrices.push()
-            ingredientOffset(itemRenderer, matrices, mode, ingredient.first, ingredient.second)
+            ingredientOffset(itemRenderer, matrices, mode, newMode, ingredient.first, ingredient.second)
             matrices.rotate(Axis.X_POSITIVE.rotationDegrees(offsets.x))
-            if (mode != ModelTransformationMode.GUI) matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(offsets.y))
+            if (newMode != ModelTransformationMode.GUI) matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(offsets.y))
             matrices.rotate(Axis.Z_POSITIVE.rotationDegrees(offsets.z))
 
             itemRenderer.renderItem(
                 ingredient.first,
-                mode,
+                newMode,
                 light,
                 overlay,
                 matrices,
@@ -103,7 +105,14 @@ object BurgerItemRenderer : DynamicItemRenderer {
         matrices.translate(0.5f, 0.5f, 0.5f)
     }
 
-    fun ingredientOffset(itemRenderer: ItemRenderer, matrices: MatrixStack, mode: ModelTransformationMode, ingredientStack: ItemStack, ingredient: BurgerIngredient) {
+    fun ingredientOffset(
+        itemRenderer: ItemRenderer,
+        matrices: MatrixStack,
+        originalMode: ModelTransformationMode,
+        mode: ModelTransformationMode,
+        ingredientStack: ItemStack,
+        ingredient: BurgerIngredient
+    ) {
         val model = if (ingredient is VanillaItemBurgerIngredientItem) {
             itemRenderer.models.getModel(ingredient.getVanillaItem(ingredientStack)) ?: return
         } else itemRenderer.models.getModel(ingredient.asItem()) ?: return
@@ -158,7 +167,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
         } else {
             matrices.translate(
                 0f,
-                if (mode == ModelTransformationMode.GUI) 0f
+                if (originalMode == ModelTransformationMode.GUI) 0f
                 else scale.y * ((8f / 16) + if (ingredient.modelHeight(ingredientStack) == 0.0) 0.001f else 0f),
                 0f
             )
