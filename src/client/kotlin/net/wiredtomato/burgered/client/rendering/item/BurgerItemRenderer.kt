@@ -77,7 +77,11 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
 
             matrices.pop()
-            matrices.translate(0.0, (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.second), 0.0)
+            matrices.translate(
+                0.0,
+                (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.second),
+                0.0
+            )
         }
 
         matrices.pop()
@@ -140,14 +144,21 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
         }
 
-        if (ingredient is BlockItem || (ingredient is VanillaItemBurgerIngredientItem && ingredient.getVanillaStack(ingredientStack).item is BlockItem)) {
+        if (ingredient is BlockItem || (ingredient is VanillaItemBurgerIngredientItem && ingredient.shouldApplyBlockTransformations(
+                ingredientStack
+            ))
+        ) {
             matrices.scale(0.5f, 0.5f, 0.5f)
-            matrices.translate(0.0, if (originalMode == ModelTransformationMode.GUI) -0.5 / scale.y else 0.5 / scale.y, 0.0)
+            matrices.translate(
+                0.0,
+                if (originalMode == ModelTransformationMode.GUI) -0.5 / scale.y else 0.5 / scale.y,
+                0.0
+            )
         }
 
-        if (ingredient is VanillaItemBurgerIngredientItem) run vanillaCondition@ {
+        if (ingredient is VanillaItemBurgerIngredientItem) run vanillaCondition@{
             val vanillaStack = ingredient.getVanillaStack(ingredientStack)
-            if (vanillaStack.item is BlockItem) return@vanillaCondition
+            if (vanillaStack.item is BlockItem && ingredient.shouldApplyBlockTransformations(ingredientStack)) return@vanillaCondition
 
             matrices.scale(0.5f, 0.5f, 0.5f)
             matrices.translate(-0.03, 0.035, 0.03)
@@ -160,22 +171,26 @@ object BurgerItemRenderer : DynamicItemRenderer {
                 ModelTransformationMode.GROUND -> {
                     matrices.translate(0.02, 0.23, -0.15)
                 }
+
                 ModelTransformationMode.GUI -> {
                     matrices.translate(0.0, -1.0, 0.0)
                 }
+
                 ModelTransformationMode.FIRST_PERSON_RIGHT_HAND, ModelTransformationMode.FIRST_PERSON_LEFT_HAND -> {
                     matrices.translate(-0.15, 0.42, -0.02)
                     matrices.rotate(Axis.Y_POSITIVE.rotationDegrees(0f))
                     matrices.rotate(Axis.Z_NEGATIVE.rotationDegrees(65f))
                     matrices.rotate(Axis.X_POSITIVE.rotationDegrees(25f))
                 }
+
                 ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, ModelTransformationMode.THIRD_PERSON_LEFT_HAND -> {
                     matrices.translate(0.0, 0.42, -0.1)
                 }
+
                 else -> {}
             }
 
-            if (vanillaStack.item !is BlockItem) matrices.rotate(Axis.X_POSITIVE.rotationDegrees(90f))
+            matrices.rotate(Axis.X_POSITIVE.rotationDegrees(90f))
         } else {
             matrices.translate(
                 0f,

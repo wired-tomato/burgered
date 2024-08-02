@@ -1,8 +1,10 @@
 package net.wiredtomato.burgered.item
 
+import net.minecraft.block.AbstractPlantBlock
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
+import net.minecraft.item.BlockItem
 import net.minecraft.item.FoodComponent
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
@@ -30,6 +32,13 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : Burg
 
     override fun modelHeight(stack: ItemStack): Double {
         return findFirstMatchingVanillaItem(stack).modelHeight
+    }
+
+    fun shouldApplyBlockTransformations(stack: ItemStack): Boolean {
+        val vanillaStack = getVanillaStack(stack)
+        val item = vanillaStack.item
+
+        return findFirstMatchingVanillaItem(stack).modelHeight == 16.0 || (item is BlockItem && item.block !is AbstractPlantBlock)
     }
 
     override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) {
