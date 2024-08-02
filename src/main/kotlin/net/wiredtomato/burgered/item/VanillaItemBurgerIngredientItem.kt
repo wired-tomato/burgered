@@ -28,6 +28,10 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientSettings) : Burg
         return findFirstMatchingVanillaItem(stack).statusEffects
     }
 
+    override fun modelHeight(stack: ItemStack): Double {
+        return findFirstMatchingVanillaItem(stack).modelHeight
+    }
+
     override fun onEat(entity: LivingEntity, world: World, stack: ItemStack, component: FoodComponent) {
         findFirstMatchingVanillaItem(stack).eatEvent.ifPresent { it.onEat(entity, world, stack, component) }
     }

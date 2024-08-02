@@ -6,6 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.render.model.json.ModelTransformationMode
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
@@ -139,7 +140,15 @@ object BurgerItemRenderer : DynamicItemRenderer {
             )
         }
 
-        if (ingredient is VanillaItemBurgerIngredientItem) {
+        if (ingredient is BlockItem || (ingredient is VanillaItemBurgerIngredientItem && ingredient.getVanillaStack(ingredientStack).item is BlockItem)) {
+            matrices.scale(0.5f, 0.5f, 0.5f)
+            matrices.translate(0.0, if (originalMode == ModelTransformationMode.GUI) -0.5 / scale.y else 0.5 / scale.y, 0.0)
+        }
+
+        if (ingredient is VanillaItemBurgerIngredientItem) run vanillaCondition@ {
+            val vanillaStack = ingredient.getVanillaStack(ingredientStack)
+            if (vanillaStack.item is BlockItem) return@vanillaCondition
+
             matrices.scale(0.5f, 0.5f, 0.5f)
             matrices.translate(-0.03, 0.035, 0.03)
 
@@ -166,7 +175,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
                 else -> {}
             }
 
-            matrices.rotate(Axis.X_POSITIVE.rotationDegrees(90f))
+            if (vanillaStack.item !is BlockItem) matrices.rotate(Axis.X_POSITIVE.rotationDegrees(90f))
         } else {
             matrices.translate(
                 0f,

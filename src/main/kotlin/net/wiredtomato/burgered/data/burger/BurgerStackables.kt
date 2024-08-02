@@ -14,6 +14,7 @@ data class BurgerStackable(
     val item: Item,
     val hunger: Int,
     val saturation: Float,
+    val modelHeight: Double = 1.0,
     val statusEffects: List<StatusEffectEntry> = listOf(),
     val customName: Optional<String> = Optional.empty(),
     val eatEvent: Optional<BurgerStackableEatCallback> = Optional.empty()
@@ -24,6 +25,7 @@ data class BurgerStackable(
                 Registries.ITEM.codec.fieldOf("item").forGetter(BurgerStackable::item),
                 Codec.INT.fieldOf("hunger").orElse(0).forGetter(BurgerStackable::hunger),
                 Codec.FLOAT.fieldOf("saturation").orElse(0f).forGetter(BurgerStackable::saturation),
+                Codec.DOUBLE.fieldOf("modelHeight").orElse(1.0).forGetter(BurgerStackable::modelHeight),
                 StatusEffectEntry.CODEC.listOf().fieldOf("statusEffects").orElse(listOf()).forGetter(BurgerStackable::statusEffects),
                 Codec.STRING.optionalFieldOf("customName").forGetter(BurgerStackable::customName),
                 BurgeredRegistries.EAT_EVENT.codec.optionalFieldOf("eatEvent").forGetter(BurgerStackable::eatEvent),

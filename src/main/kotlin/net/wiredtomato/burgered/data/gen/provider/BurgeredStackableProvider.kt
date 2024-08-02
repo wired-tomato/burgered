@@ -25,8 +25,25 @@ class BurgeredStackableProvider(
             BurgerStackable(
                 Items.ENDER_PEARL,
                 4,
-                8f,
-                listOf()
+                8f
+            )
+        )
+
+        builder.offer(
+            BurgerStackable(
+                Items.STONE,
+                1,
+                1f,
+                16.0
+            )
+        )
+
+        builder.offer(
+            BurgerStackable(
+                Items.ANVIL,
+                1,
+                1f,
+                16.0
             )
         )
     }
