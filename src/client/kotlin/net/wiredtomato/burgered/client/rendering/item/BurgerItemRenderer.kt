@@ -79,7 +79,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
             matrices.pop()
             matrices.translate(
                 0.0,
-                (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.second),
+                (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.first, ingredient.second),
                 0.0
             )
         }
@@ -201,8 +201,8 @@ object BurgerItemRenderer : DynamicItemRenderer {
         }
     }
 
-    fun getIngredientScale(ingredient: BurgerIngredient): Float {
-        return if (ingredient is VanillaItemBurgerIngredientItem) 0.5f else 1f
+    fun getIngredientScale(ingredientStack: ItemStack, ingredient: BurgerIngredient): Float {
+        return if ((ingredient is VanillaItemBurgerIngredientItem && ingredient.shouldApplyBlockTransformations(ingredientStack)) || ingredient is BlockItem) 0.5f else 1f
     }
 
     fun Vector3f.isIdentity() = this.x == 1f && this.y == 1f && this.z == 1f
