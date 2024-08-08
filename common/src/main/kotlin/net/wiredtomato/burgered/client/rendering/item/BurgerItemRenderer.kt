@@ -171,7 +171,9 @@ object BurgerItemRenderer : DynamicItemRenderer {
             }
             is IngredientRenderSettings.ItemModel2d -> {
                 matrices.translate(
-                    -0.06 / scale.x, 0.07 / scale.y, 0.03 / scale.z
+                    -0.015 / scale.x,
+                    if (originalMode == ItemDisplayContext.GUI) 1.525 / scale.y else 0.0175 / scale.y,
+                    0.015 / scale.z
                 )
 
                 if (originalMode == ItemDisplayContext.GUI) {

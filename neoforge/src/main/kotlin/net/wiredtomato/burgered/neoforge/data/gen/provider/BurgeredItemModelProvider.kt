@@ -1,5 +1,6 @@
 package net.wiredtomato.burgered.neoforge.data.gen.provider
 
+import net.minecraft.client.renderer.block.model.BlockModel.GuiLight
 import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
@@ -18,8 +19,8 @@ class BurgeredItemModelProvider(
         val DYNAMICLY_RENDERED = ModelFile.UncheckedModelFile(ResourceLocation.withDefaultNamespace("builtin/entity"))
         val TOP_BUN_MODEL = ModelFile.UncheckedModelFile(Burgered.modLoc("item/top_bun"))
 
-        parented(BurgeredItems.BURGER, DYNAMICLY_RENDERED)
-        parented(BurgeredItems.VANILLA_INGREDIENT, DYNAMICLY_RENDERED)
+        parented(BurgeredItems.BURGER, DYNAMICLY_RENDERED).guiLight(GuiLight.FRONT)
+        parented(BurgeredItems.VANILLA_INGREDIENT, DYNAMICLY_RENDERED).guiLight(GuiLight.FRONT)
         parented(BurgeredItems.CUSTOM_BURGER_INGREDIENT, TOP_BUN_MODEL)
 
         basicItem(BurgeredItems.BOOK_OF_BURGERS)
