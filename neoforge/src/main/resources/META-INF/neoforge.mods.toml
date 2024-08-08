@@ -8,9 +8,13 @@ version="${mod_version}"
 displayName="Burgered"
 authors="WiredTomato"
 description='''Burgers, Burgers, & even more burgers'''
+logoFile="assets/burgered/icon.png"
 
 [[mixins]]
 config="burgered.mixins.json"
+
+[[mixins]]
+config="burgered.common.mixins.json"
 
 [[dependencies.${mod_id}]]
     modId="neoforge"

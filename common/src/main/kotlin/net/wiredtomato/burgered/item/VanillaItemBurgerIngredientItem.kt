@@ -31,10 +31,6 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientProperties) : Bu
         return findFirstMatchingVanillaItem(stack).statusEffects
     }
 
-    override fun modelHeight(stack: ItemStack): Double {
-        return findFirstMatchingVanillaItem(stack).modelHeight
-    }
-
     fun shouldApplyBlockTransformations(stack: ItemStack): Boolean {
         val vanillaStack = getVanillaStack(stack)
         val item = vanillaStack.item

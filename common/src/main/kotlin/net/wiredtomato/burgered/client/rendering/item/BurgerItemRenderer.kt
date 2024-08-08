@@ -5,20 +5,24 @@ import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.ItemRenderer
+import net.minecraft.client.resources.model.BakedModel
+import net.minecraft.client.resources.model.ModelManager
+import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.levelgen.RandomSupport
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
+import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
+import net.wiredtomato.burgered.api.rendering.ModelId
+import net.wiredtomato.burgered.api.rendering.WithCustomModel
+import net.wiredtomato.burgered.api.rendering.WithModelHeight
 import net.wiredtomato.burgered.client.config.BurgeredClientConfig
 import net.wiredtomato.burgered.init.BurgeredDataComponents
-import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
 import net.wiredtomato.burgered.item.components.BurgerComponent
 import net.wiredtomato.burgered.platform.DynamicItemRenderer
-import org.joml.Quaternionf
 import org.joml.Vector3f
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -26,8 +30,6 @@ import kotlin.random.Random
 object BurgerItemRenderer : DynamicItemRenderer {
     private val sloppinessCache: MutableMap<Triple<Double, ResourceLocation, Int>, RotationOffsets> = mutableMapOf()
     private var lastMaxRot = Vector3f()
-
-
 
     override fun render(
         stack: ItemStack,
@@ -37,7 +39,7 @@ object BurgerItemRenderer : DynamicItemRenderer {
         light: Int,
         overlay: Int
     ) {
-        val newMode = if (BurgeredClientConfig.renderNoTransform) ItemDisplayContext.NONE else ctx
+        val newMode = ItemDisplayContext.NONE
 
         val maxRot = Vector3f(
             BurgeredClientConfig.maxSloppinessRotationX,
@@ -59,31 +61,45 @@ object BurgerItemRenderer : DynamicItemRenderer {
         itemOffsets(matrices, newMode)
         burger.ingredients().forEachIndexed { i, ingredient ->
             if (i >= BurgeredClientConfig.maxRenderedBurgerIngredients) return@forEachIndexed
+            val renderSettings = ingredient.second.renderSettings(ingredient.first)
+            val model = getModel(itemRenderer, client.modelManager, ingredient.first, ingredient.second)
 
             val offsets = sloppinessOffset(burger, ingredient.second, i)
             matrices.pushPose()
-            ingredientOffset(itemRenderer, matrices, ctx, newMode, ingredient.first, ingredient.second)
+            ingredientOffset(matrices, ctx, ingredient.first, ingredient.second)
             matrices.mulPose(Axis.XP.rotationDegrees(offsets.x))
-            if (newMode != ItemDisplayContext.GUI) matrices.mulPose(Axis.YP.rotationDegrees(offsets.y))
+            matrices.mulPose(Axis.YP.rotationDegrees(offsets.y))
             matrices.mulPose(Axis.ZP.rotationDegrees(offsets.z))
 
-            itemRenderer.renderStatic(
+            itemRenderer.render(
                 ingredient.first,
                 newMode,
-                light,
-                overlay,
+                false,
                 matrices,
                 vertexConsumers,
-                client.level,
-                0
+                light,
+                overlay,
+                model
             )
 
             matrices.popPose()
-            matrices.translate(
-                0.0,
-                (ingredient.second.modelHeight(ingredient.first) / 16.0) * getIngredientScale(ingredient.first, ingredient.second),
-                0.0
-            )
+            when (renderSettings) {
+                is WithModelHeight -> {
+                    matrices.translate(
+                        0.0,
+                        (renderSettings.modelHeight / 16.0) * renderSettings.renderScale.y,
+                        0.0
+                    )
+                }
+                is IngredientRenderSettings.ItemModel2d -> {
+                    matrices.translate(
+                        0.0,
+                        (1.0 / 16.0) * renderSettings.renderScale.y,
+                        0.0
+                    )
+                }
+                else -> {}
+            }
         }
 
         matrices.popPose()
@@ -112,105 +128,67 @@ object BurgerItemRenderer : DynamicItemRenderer {
         matrices.translate(0.5f, 0.5f, 0.5f)
     }
 
-    fun ingredientOffset(
+    fun ModelId.toModelResourceLocation() = ModelResourceLocation(this.model, this.variant)
+
+    fun getModel(
         itemRenderer: ItemRenderer,
+        modelManager: ModelManager,
+        ingredientStack: ItemStack,
+        ingredient: BurgerIngredient
+    ): BakedModel {
+        val renderSettings = ingredient.renderSettings(ingredientStack)
+        return when (renderSettings) {
+            is WithCustomModel -> {
+                modelManager.getModel(renderSettings.customModelId.toModelResourceLocation())
+            }
+            else -> {
+                itemRenderer.itemModelShaper.getItemModel(ingredientStack)
+            }
+        }
+    }
+
+    fun ingredientOffset(
         matrices: PoseStack,
         originalMode: ItemDisplayContext,
-        mode: ItemDisplayContext,
         ingredientStack: ItemStack,
         ingredient: BurgerIngredient
     ) {
-        val model = if (ingredient is VanillaItemBurgerIngredientItem) {
-            itemRenderer.itemModelShaper.getItemModel(ingredient.getVanillaStack(ingredientStack)) ?: return
-        } else itemRenderer.itemModelShaper.getItemModel(ingredient.asItem()) ?: return
+        val renderSettings = ingredient.renderSettings(ingredientStack)
+        val scale = renderSettings.renderScale
+        val offset = renderSettings.offset
 
-        val transform = model.transforms.getTransform(mode)
+        matrices.scale(scale.x.toFloat(), scale.y.toFloat(), scale.z.toFloat())
+        matrices.translate(offset.x, offset.y, offset.z)
 
-        val scale = transform.scale
-        if (!transform.scale.isIdentity()) {
-            matrices.scale(1 / transform.scale.x, 1 / transform.scale.y, 1 / transform.scale.z)
-        }
-
-        if (!transform.translation.isZeroed()) {
-            matrices.translate(-transform.translation.x, -transform.translation.y, -transform.translation.z)
-        }
-
-        if (!transform.rotation.isZeroed()) {
-            matrices.mulPose(
-                Quaternionf()
-                    .rotationXYZ(
-                        -transform.rotation.x.toRadians(),
-                        -transform.rotation.y.toRadians(),
-                        -transform.rotation.z.toRadians()
-                    )
-            )
-        }
-
-        if (ingredient is BlockItem || (ingredient is VanillaItemBurgerIngredientItem && ingredient.shouldApplyBlockTransformations(
-                ingredientStack
-            ))
-        ) {
-            matrices.scale(0.5f, 0.5f, 0.5f)
-            matrices.translate(
-                0.0,
-                if (originalMode == ItemDisplayContext.GUI) -0.5 / scale.y else 0.5 / scale.y,
-                0.0
-            )
-        }
-
-        if (ingredient is VanillaItemBurgerIngredientItem) run vanillaCondition@{
-            val vanillaStack = ingredient.getVanillaStack(ingredientStack)
-            if (vanillaStack.item is BlockItem && ingredient.shouldApplyBlockTransformations(ingredientStack)) return@vanillaCondition
-
-            matrices.scale(0.5f, 0.5f, 0.5f)
-            matrices.translate(-0.03, 0.035, 0.03)
-
-            if (originalMode == ItemDisplayContext.GUI && mode != ItemDisplayContext.GUI) {
-                matrices.translate(0.0, -1.0, 0.0)
+        when (renderSettings) {
+            is IngredientRenderSettings.ItemModel3d -> {
+                matrices.translate(
+                    0.0,
+                    if (originalMode == ItemDisplayContext.GUI) 0.0
+                    else scale.y * ((8f / 16) + if (renderSettings.modelHeight == 0.0) 0.001 else 0.0),
+                    0.0
+                )
             }
+            is IngredientRenderSettings.ItemModel2d -> {
+                matrices.translate(
+                    -0.06 / scale.x, 0.07 / scale.y, 0.03 / scale.z
+                )
 
-            when (mode) {
-                ItemDisplayContext.GROUND -> {
-                    matrices.translate(0.02, 0.23, -0.15)
+                if (originalMode == ItemDisplayContext.GUI) {
+                    matrices.translate(0.0, -2.0 / scale.x, 0.0)
                 }
 
-                ItemDisplayContext.GUI -> {
-                    matrices.translate(0.0, -1.0, 0.0)
-                }
-
-                ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, ItemDisplayContext.FIRST_PERSON_LEFT_HAND -> {
-                    matrices.translate(-0.15, 0.42, -0.02)
-                    matrices.mulPose(Axis.YP.rotationDegrees(0f))
-                    matrices.mulPose(Axis.ZN.rotationDegrees(65f))
-                    matrices.mulPose(Axis.XP.rotationDegrees(25f))
-                }
-
-                ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, ItemDisplayContext.THIRD_PERSON_LEFT_HAND -> {
-                    matrices.translate(0.0, 0.42, -0.1)
-                }
-
-                else -> {}
+                matrices.mulPose(Axis.XP.rotationDegrees(90f))
             }
-
-            matrices.mulPose(Axis.XP.rotationDegrees(90f))
-        } else {
-            matrices.translate(
-                0f,
-                if (originalMode == ItemDisplayContext.GUI) 0f
-                else scale.y * ((8f / 16) + if (ingredient.modelHeight(ingredientStack) == 0.0) 0.001f else 0f),
-                0f
-            )
+            is IngredientRenderSettings.Block -> {
+                matrices.translate(
+                    0.0,
+                    if (originalMode == ItemDisplayContext.GUI) -0.25 / scale.y else 0.25 / scale.y,
+                    0.0
+                )
+            }
         }
     }
-
-    fun getIngredientScale(ingredientStack: ItemStack, ingredient: BurgerIngredient): Float {
-        return if ((ingredient is VanillaItemBurgerIngredientItem && ingredient.shouldApplyBlockTransformations(ingredientStack)) || ingredient is BlockItem) 0.5f else 1f
-    }
-
-    fun Vector3f.isIdentity() = this.x == 1f && this.y == 1f && this.z == 1f
-    fun Vector3f.isZeroed() = this.x == 0f && this.y == 0f && this.z == 0f
-
-    fun Float.toRadians() = this * Math.PI.toFloat() / 180
 
     data class RotationOffsets(val x: Float, val y: Float, val z: Float)
 }

@@ -31,7 +31,7 @@ class BurgerStackerEntity(
 
     fun addStack(player: Player, stack: ItemStack): Pair<Component?, Boolean> {
         val item = stack.item
-        var result: Component? = Component.empty()
+        var result: Component? = null
         var interact = false
         if (item is BurgerIngredient) {
             ensureNonEmptyBurger()

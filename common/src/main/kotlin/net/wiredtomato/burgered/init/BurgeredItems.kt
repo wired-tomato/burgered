@@ -9,10 +9,12 @@ import net.minecraft.world.item.Item
 import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.api.registry.RegistryDelegate
 import net.wiredtomato.burgered.api.registry.registered
+import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
 import net.wiredtomato.burgered.item.BurgerIngredientItem
 import net.wiredtomato.burgered.item.BurgerIngredientItem.BurgerIngredientProperties
 import net.wiredtomato.burgered.item.BurgerItem
 import net.wiredtomato.burgered.item.VanillaItemBurgerIngredientItem
+import org.joml.Vector3d
 
 object BurgeredItems {
     val ITEMS = DeferredRegister.create(Burgered.MOD_ID, Registries.ITEM)
@@ -24,7 +26,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(1)
                 .overSaturation(1.0)
-                .modelHeight(2.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 2.0))
         )
     }
 
@@ -35,7 +37,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(1)
                 .overSaturation(1.0)
-                .modelHeight(2.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 2.0))
         )
     }
 
@@ -46,7 +48,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(1)
                 .overSaturation(2.0)
-                .modelHeight(1.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 1.0))
                 .statusEffect(MobEffectInstance(MobEffects.POISON, 200, 2), 0.25f)
         )
     }
@@ -58,7 +60,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(4)
                 .overSaturation(8.0)
-                .modelHeight(1.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 1.0))
         )
     }
 
@@ -69,7 +71,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(1)
                 .overSaturation(0.25)
-                .modelHeight(1.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 1.0))
         )
     }
 
@@ -80,7 +82,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(1)
                 .overSaturation(0.25)
-                .modelHeight(0.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 0.0))
         )
     }
 
@@ -91,7 +93,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(7)
                 .overSaturation(8.0)
-                .modelHeight(4.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 4.0))
         )
     }
 
@@ -102,7 +104,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(2)
                 .overSaturation(1.0)
-                .modelHeight(0.0)
+                .renderSettings(IngredientRenderSettings.ItemModel3d(Vector3d(1.0), Vector3d(), 0.0))
         )
     }
 
@@ -119,7 +121,7 @@ object BurgeredItems {
             BurgerIngredientProperties()
                 .saturation(2)
                 .overSaturation(4.0)
-                .modelHeight(1.0)
+                .renderSettings(IngredientRenderSettings.ItemModel2d(Vector3d(0.5), Vector3d()))
         )
     }
 
