@@ -18,12 +18,36 @@ architectury {
 
 subprojects {
     apply(plugin = "dev.architectury.loom")
+    apply(plugin = "maven-publish")
 
     val loom = project.extensions.getByName<LoomGradleExtensionAPI>("loom")
 
     dependencies {
         "minecraft"("com.mojang:minecraft:${project.property("minecraft_version")}")
         "mappings"(loom.officialMojangMappings())
+    }
+
+    val projectVersion = rootProject.property("mod_version").toString()
+    publishing {
+        publications {
+            create<MavenPublication>("${project.property("mod_id")}") {
+                groupId = project.property("maven_group").toString()
+                artifactId = rootProject.property("archives_base_name").toString() + "-${project.name}"
+                version = if (projectVersion.toString().contains("beta")) "$projectVersion-SNAPSHOT" else projectVersion
+
+                from(components["java"])
+            }
+        }
+
+        repositories {
+            maven(if (projectVersion.contains("beta")) "https://maven.wiredtomato.net/snapshots" else "https://maven.wiredtomato.net/releases") {
+                name = "wtRepo"
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        }
     }
 }
 
@@ -62,11 +86,5 @@ allprojects {
 
     java {
         withSourcesJar()
-    }
-
-    publishing {
-        publications {
-
-        }
     }
 }
