@@ -1,0 +1,49 @@
+{
+	"schemaVersion": 1,
+	"id": "burgered",
+	"version": "${version}",
+	"name": "Burgered",
+	"description": "Burgers, Burgers, & More Burgers",
+	"authors": [
+		"WiredTomato"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/burgered",
+		"sources": "https://github.com/wired-tomato/burgered"
+	},
+	"license": "MIT",
+	"icon": "assets/burgered/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "net.wiredtomato.burgered.fabric.BurgeredFabric::init",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "net.wiredtomato.burgered.fabric.client.BurgeredFabricClient::init",
+				"adapter": "kotlin"
+			}
+		],
+		"modmenu": [
+			{
+				"value": "net.wiredtomato.burgered.fabric.modmenu.BurgeredModMenu",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"burgered.fabriclike.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*",
+		"architectury": ">=13.0.2",
+		"cloth-config": ">=15.0.128"
+	}
+}

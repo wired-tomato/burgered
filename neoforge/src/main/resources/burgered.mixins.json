@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.wiredtomato.burgered.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "BlockEntityWithoutLevelRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

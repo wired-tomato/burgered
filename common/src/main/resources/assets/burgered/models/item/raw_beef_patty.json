@@ -1,0 +1,7 @@
+{
+  "parent": "burgered:item/beef_patty",
+  "textures": {
+    "0": "burgered:item/raw_beef_patty",
+    "particle": "burgered:item/raw_beef_patty"
+  }
+}

@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "burgered:item/bun",
+		"particle": "burgered:item/bun"
+	},
+	"elements": [
+		{
+			"name": "bottom_bun",
+			"from": [5, 0, 5],
+			"to": [11, 2, 11],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 1, 8]},
+			"faces": {
+				"north": {"uv": [6, 4, 12, 6], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [6, 2, 12, 4], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [6, 0, 12, 2], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [6, 6, 12, 8], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [6, 6, 0, 12], "texture": "#0"},
+				"down": {"uv": [6, 6, 0, 0], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 8, 0]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 8, 0]
+		},
+		"firstperson_righthand": {
+			"translation": [0, 8, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [0, 8, 0]
+		},
+		"ground": {
+			"translation": [0, 8, 0]
+		},
+		"gui": {
+			"rotation": [90, 0, 0]
+		},
+		"fixed": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 0, -7.5]
+		}
+	}
+}
