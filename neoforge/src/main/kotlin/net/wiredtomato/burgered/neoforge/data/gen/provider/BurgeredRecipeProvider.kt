@@ -106,8 +106,9 @@ class BurgeredRecipeProvider(
         stonecutterResultFromBase(recipeOutput, RecipeCategory.FOOD, BurgeredItems.BOTTOM_BUN, Items.BREAD)
         grillingRecipe(
             recipeOutput,
-            Ingredient.of(BurgeredItems.RAW_BEEF_PATTY),
             CookingBookCategory.FOOD,
+            Ingredient.of(BurgeredItems.RAW_BEEF_PATTY),
+            ItemStack.EMPTY,
             BurgeredItems.BEEF_PATTY.defaultInstance,
             25f,
             100,
@@ -117,9 +118,10 @@ class BurgeredRecipeProvider(
 
         grillingRecipe(
             recipeOutput,
-            Ingredient.of(Items.MILK_BUCKET),
             CookingBookCategory.FOOD,
-            BurgeredItems.CHEESE_SLICE.defaultInstance,
+            Ingredient.of(Items.MILK_BUCKET),
+            Items.BUCKET.defaultInstance,
+            ItemStack(BurgeredItems.CHEESE_SLICE, 4),
             25f,
             100,
             getHasName(Items.MILK_BUCKET),
@@ -129,8 +131,9 @@ class BurgeredRecipeProvider(
 
     fun grillingRecipe(
         exporter: RecipeOutput,
-        ingredient: Ingredient,
         category: CookingBookCategory,
+        ingredient: Ingredient,
+        transform: ItemStack,
         result: ItemStack,
         experience: Float,
         cookingTime: Int,
@@ -138,7 +141,7 @@ class BurgeredRecipeProvider(
         unlockedBy: Criterion<*>,
         recipeId: ResourceLocation = result.item.id
     ) {
-        val recipe = GrillingRecipe("", category, ingredient, result, experience, cookingTime)
+        val recipe = GrillingRecipe("", category, ingredient, transform, result, experience, cookingTime)
         val builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(
             AdvancementRewards.Builder.recipe(recipeId)
         ).requirements(AdvancementRequirements.Strategy.OR)

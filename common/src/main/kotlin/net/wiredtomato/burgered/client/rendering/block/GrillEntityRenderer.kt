@@ -46,7 +46,8 @@ class GrillEntityRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntit
                 matrices.mulPose(Axis.XP.rotationDegrees(270f))
                 when (direction) {
                     Direction.NORTH -> {
-                        matrices.translate(-0.5 / itemScale, 0.5 / itemScale, 0.0)
+                        matrices.translate(-1.0 / itemScale, 0.5 / itemScale, 0.0)
+                        matrices.translate(1.0 / itemScale * i, 0.0, 0.0)
                     }
                     Direction.SOUTH -> {
                         matrices.mulPose(Axis.ZP.rotationDegrees(180f))

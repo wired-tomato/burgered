@@ -62,7 +62,7 @@ class GrillBlock(properties: Properties) : BaseEntityBlock(properties) {
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
-        return defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, ctx.clickedFace.opposite)
+        return defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, ctx.horizontalDirection.opposite)
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {

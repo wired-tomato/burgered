@@ -46,7 +46,9 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-language-kotlin:${rootProject.property("fabric_kotlin_version")}")
     modApi("com.terraformersmc:modmenu:11.0.1")
-    modApi("me.shedaniel.cloth:cloth-config-fabric:15.0.128")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.property("cloth_config_version")}")
+    modCompileOnly("dev.emi:emi-fabric:${rootProject.property("emi_version")}:api")
+    modRuntimeOnly("dev.emi:emi-fabric:${rootProject.property("emi_version")}")
 }
 
 tasks.processResources {

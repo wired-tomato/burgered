@@ -32,6 +32,12 @@
 				"value": "net.wiredtomato.burgered.fabric.modmenu.BurgeredModMenu",
 				"adapter": "kotlin"
 			}
+		],
+		"emi": [
+			{
+				"value": "net.wiredtomato.burgered.compat.emi.BurgeredEmiPlugin",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"mixins": [

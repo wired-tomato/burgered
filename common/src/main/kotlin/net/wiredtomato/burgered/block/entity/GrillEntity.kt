@@ -43,8 +43,7 @@ class GrillEntity(
         hitResult: BlockHitResult
     ): InteractionResult {
         val stack = player.mainHandItem
-
-        val hitPos = hitResult.blockPos
+        val hitPos = hitResult.location
 
         val center = pos.center
         return when (state.getValue(HorizontalDirectionalBlock.FACING)) {
@@ -65,8 +64,15 @@ class GrillEntity(
 
     fun getOrGiveItem(world: Level, player: Player, stack: ItemStack, slot: Int): InteractionResult {
         val recipe = getRecipe(world, SingleRecipeInput(stack))
+        val stack = player.mainHandItem
+        val inventoryItem = inventory[slot].copy()
+        val expandable = (stack.maxStackSize - stack.count).coerceAtMost(inventoryItem.count)
         if (!inventory[slot].isEmpty) {
-            player.addItem(inventory[slot])
+            stack.count += expandable
+            if (inventoryItem.count > expandable) {
+                inventoryItem.count -= expandable
+                player.addItem(inventoryItem)
+            }
             inventory[slot] = ItemStack.EMPTY
             return InteractionResult.SUCCESS
         }
@@ -123,8 +129,14 @@ class GrillEntity(
                 val recipe = recipeHolder.value
                 if (cookTime >= recipe.cookingTime) {
                     val result = recipe.assemble(recipeInput, world.registryAccess())
+                    val transform = recipe.transform
                     inventory[i] = result
                     cookTimes[i] = 0
+
+                    if (!transform.isEmpty) {
+                        Block.popResource(world, blockPos, transform)
+                    }
+
                     if (world is ServerLevel) {
                         val pos = blockPos.center
                         ExperienceOrb.award(world, pos, recipe.experience.roundToInt())

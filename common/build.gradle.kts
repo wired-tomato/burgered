@@ -21,5 +21,6 @@ sourceSets {
 dependencies {
     modImplementation("net.fabricmc:fabric-loader:${rootProject.property("fabric_loader_version")}")
     modApi("dev.architectury:architectury:${rootProject.property("architectury_version")}")
-    modApi("me.shedaniel.cloth:cloth-config:15.0.128")
+    modApi("me.shedaniel.cloth:cloth-config:${rootProject.property("cloth_config_version")}")
+    modCompileOnly("dev.emi:emi-xplat-intermediary:${rootProject.property("emi_version")}:api")
 }

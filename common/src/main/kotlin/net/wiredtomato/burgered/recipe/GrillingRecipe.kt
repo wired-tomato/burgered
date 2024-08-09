@@ -7,7 +7,8 @@ import net.wiredtomato.burgered.init.BurgeredRecipes
 class GrillingRecipe(
     group: String,
     category: CookingBookCategory,
-    ingredient: Ingredient,
+    val ingredient: Ingredient,
+    val transform: ItemStack,
     val result: ItemStack,
     experience: Float,
     cookTime: Int
@@ -15,6 +16,6 @@ class GrillingRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val SERIALIZER = SimpleCookingSerializer(::GrillingRecipe, 100)
+        val SERIALIZER = GrillingRecipeSerializer()
     }
 }

@@ -49,7 +49,9 @@ dependencies {
         exclude("net.neoforged.fancymodloader")
     }
     modImplementation("dev.architectury:architectury-neoforge:${rootProject.property("architectury_version")}")
-    modApi("me.shedaniel.cloth:cloth-config-neoforge:15.0.128")
+    modApi("me.shedaniel.cloth:cloth-config-neoforge:${rootProject.property("cloth_config_version")}")
+    modCompileOnly("dev.emi:emi-neoforge:${rootProject.property("emi_version")}:api")
+    modRuntimeOnly("dev.emi:emi-neoforge:${rootProject.property("emi_version")}")
 
     common(project(":common", "namedElements")) {
         isTransitive = false

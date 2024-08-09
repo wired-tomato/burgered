@@ -9,13 +9,14 @@ import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.BushBlock
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.data.burger.BurgerStackable
 import net.wiredtomato.burgered.api.data.burger.BurgerStackables
+import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.init.BurgeredItems
 import net.wiredtomato.burgered.item.components.VanillaBurgerIngredientComponent
+import org.joml.Vector3d
 import java.util.*
 
 class VanillaItemBurgerIngredientItem(settings: BurgerIngredientProperties) : BurgerIngredientItem(settings) {
@@ -31,15 +32,24 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientProperties) : Bu
         return findFirstMatchingVanillaItem(stack).statusEffects
     }
 
-    fun shouldApplyBlockTransformations(stack: ItemStack): Boolean {
-        val vanillaStack = getVanillaStack(stack)
-        val item = vanillaStack.item
-
-        return findFirstMatchingVanillaItem(stack).modelHeight == 16.0 || (item is BlockItem && item.block !is BushBlock)
-    }
-
     override fun onEat(entity: LivingEntity, world: Level, stack: ItemStack, component: FoodProperties) {
         findFirstMatchingVanillaItem(stack).eatEvent.ifPresent { it.onEat(entity, world, stack, component) }
+    }
+
+    override fun renderSettings(stack: ItemStack): IngredientRenderSettings {
+        val stackable = findFirstMatchingVanillaItem(stack)
+        return if (stackable.item is BlockItem) {
+            IngredientRenderSettings.Block(
+                Vector3d(0.5),
+                Vector3d(),
+                16.0
+            )
+        } else {
+            IngredientRenderSettings.ItemModel2d(
+                Vector3d(0.5),
+                Vector3d(),
+            )
+        }
     }
 
     override fun inventoryTick(stack: ItemStack, world: Level, entity: Entity, slot: Int, selected: Boolean) {
@@ -79,7 +89,7 @@ class VanillaItemBurgerIngredientItem(settings: BurgerIngredientProperties) : Bu
 
     override fun getName(stack: ItemStack): Component {
         val option: Optional<Component> = findFirstMatchingVanillaItem(stack).customName.map { Component.translatable(it) }
-        return option.orElse(getVanillaStack(stack).displayName)
+        return option.orElse(getVanillaStack(stack).hoverName)
     }
 
     fun getVanillaStack(stack: ItemStack): ItemStack {
