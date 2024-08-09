@@ -8,7 +8,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.client.resources.model.UnbakedModel
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.profiling.ProfilerFiller
-import net.wiredtomato.burgered.Burgered
 import java.util.function.BiConsumer
 
 fun loadCustomModels(
@@ -24,7 +23,6 @@ fun loadCustomModels(
             val path = resourceLocation.path.removePrefix("models/").removeSuffix(".json")
             val modelLocation = ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(resourceLocation.namespace, path), "")
             modelRegistry.accept(modelLocation, model)
-            Burgered.LOGGER.info("Registered $modelLocation")
         }
     }
 }
