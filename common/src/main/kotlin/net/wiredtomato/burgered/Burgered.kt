@@ -9,7 +9,7 @@ import net.minecraft.server.packs.PackType
 import net.wiredtomato.burgered.api.data.burger.BurgerStackables
 import net.wiredtomato.burgered.api.data.burger.BurgerStackablesLoader
 import net.wiredtomato.burgered.api.event.LivingEntityEvents
-import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
+import net.wiredtomato.burgered.api.ingredient.ingredient
 import net.wiredtomato.burgered.init.*
 import net.wiredtomato.burgered.networking.StackableSyncPacket
 import org.slf4j.LoggerFactory
@@ -44,7 +44,7 @@ object Burgered {
         LivingEntityEvents.ON_EAT.register onEat@ { entity, world, stack, component ->
             val burger = stack.get(BurgeredDataComponents.BURGER) ?: run {
                 val item = stack.item
-                if (item is BurgerIngredient) item.onEat(entity, world, stack, component)
+                item.ingredient()?.onEat(entity, world, stack, component)
 
                 return@onEat
             }

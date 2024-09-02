@@ -178,6 +178,14 @@ class GrillEntity(
         }
     }
 
+    fun Level.spawnItems(slot: Int, stack: ItemStack) {
+        val pos = getItemPos(slot)
+        val itemEntity = ItemEntity(this, pos.x, pos.y, pos.z, stack)
+        itemEntity.setDeltaMovement(0.0, 0.15, 0.0)
+        itemEntity.setDefaultPickUpDelay()
+        this.addFreshEntity(itemEntity)
+    }
+
     companion object : BlockEntityTicker<GrillEntity> {
         private val SKILL_CHECK_NAN = Int.MAX_VALUE
 
@@ -233,7 +241,7 @@ class GrillEntity(
                     }
 
                     if (world is ServerLevel) {
-                        ExperienceOrb.award(world, getItemPos(i), recipe.experience.roundToInt())
+                        ExperienceOrb.award(world, getItemPos(i), (recipe.experience * qualities[i].multiplier).roundToInt())
                     }
                 }
             }
@@ -242,14 +250,5 @@ class GrillEntity(
         fun getRecipe(world: Level, input: SingleRecipeInput): RecipeHolder<GrillingRecipe>? {
             return world.recipeManager.getAllRecipesFor(BurgeredRecipes.GRILLING).find { it.value.matches(input, world) }
         }
-
-    }
-
-    fun Level.spawnItems(slot: Int, stack: ItemStack) {
-        val pos = getItemPos(slot)
-        val itemEntity = ItemEntity(this, pos.x, pos.y, pos.z, stack)
-        itemEntity.setDeltaMovement(0.0, 0.15, 0.0)
-        itemEntity.setDefaultPickUpDelay()
-        this.addFreshEntity(itemEntity)
     }
 }
