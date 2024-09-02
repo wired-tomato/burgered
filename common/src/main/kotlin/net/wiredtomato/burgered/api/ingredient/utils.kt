@@ -9,7 +9,6 @@ import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.data.burger.BurgerStackables
 import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
-import org.joml.Vector3d
 
 fun Item.ingredient(): BurgerIngredient? {
     if (this is BurgerIngredient) return this
@@ -21,7 +20,7 @@ fun Item.ingredient(): BurgerIngredient? {
             override fun saturation(instance: BurgerIngredientInstance): Int = stackable.hunger
             override fun overSaturation(instance: BurgerIngredientInstance): Double = stackable.saturation.toDouble()
             override fun statusEffects(instance: BurgerIngredientInstance): List<StatusEffectEntry> = stackable.statusEffects
-            override fun renderSettings(instance: BurgerIngredientInstance): IngredientRenderSettings = IngredientRenderSettings.ItemModel2d(Vector3d(0.5), Vector3d())
+            override fun renderSettings(instance: BurgerIngredientInstance): IngredientRenderSettings = stackable.renderSettings
             override fun asItem(): Item = this@ingredient
             override fun onEat(entity: LivingEntity, world: Level, stack: ItemStack, component: FoodProperties) { }
 

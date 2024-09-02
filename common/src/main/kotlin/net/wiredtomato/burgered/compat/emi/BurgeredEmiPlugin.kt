@@ -25,14 +25,10 @@ class BurgeredEmiPlugin : EmiPlugin {
         }
     }
 
-    fun registerStacks(registry: EmiRegistry) {
-
-    }
+    fun registerStacks(registry: EmiRegistry) {}
 
     companion object {
         val GRILLING_ICON = EmiStack.of(BurgeredItems.GRILL)
         val GRILLING_RECIPE_CATEGORY = EmiRecipeCategory(Burgered.modLoc("grilling"), GRILLING_ICON, GRILLING_ICON)
-
-        internal val vanillaIngredientStacks = mutableListOf<EmiStack>()
     }
 }

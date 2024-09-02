@@ -6,6 +6,8 @@ import net.minecraft.world.item.Items
 import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.api.data.burger.BurgerStackable
 import net.wiredtomato.burgered.api.data.gen.BurgerStackableProvider
+import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
+import org.joml.Vector3d
 import java.util.concurrent.CompletableFuture
 
 class BurgeredStackablesProvider(
@@ -20,7 +22,8 @@ class BurgeredStackablesProvider(
             BurgerStackable(
                 Items.NETHER_WART,
                 2,
-                4f
+                4f,
+                renderSettings = IngredientRenderSettings.ItemModel2d(Vector3d(0.5), Vector3d())
             )
         )
 
@@ -28,7 +31,8 @@ class BurgeredStackablesProvider(
             BurgerStackable(
                 Items.ENDER_PEARL,
                 4,
-                8f
+                8f,
+                renderSettings = IngredientRenderSettings.ItemModel2d(Vector3d(0.5), Vector3d())
             )
         )
     }

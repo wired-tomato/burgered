@@ -9,10 +9,11 @@ import net.minecraft.world.item.Item
 import net.wiredtomato.burgered.Burgered
 import net.wiredtomato.burgered.api.StatusEffectEntry
 import net.wiredtomato.burgered.api.event.LivingEntityEvents
+import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
 import net.wiredtomato.burgered.init.BurgeredEatEvents
 import net.wiredtomato.burgered.init.BurgeredRegistries
 import net.wiredtomato.burgered.util.byNameCodec
-import org.jetbrains.annotations.ApiStatus.Internal
+import org.jetbrains.annotations.ApiStatus
 import java.util.*
 
 data class BurgerStackable(
@@ -22,6 +23,7 @@ data class BurgerStackable(
     val modelHeight: Double = 1.0,
     val statusEffects: List<StatusEffectEntry> = listOf(),
     val customName: Optional<String> = Optional.empty(),
+    val renderSettings: IngredientRenderSettings,
     val eatEvent: Optional<BurgerStackableEatCallback> = Optional.empty()
 ) {
     companion object {
@@ -34,6 +36,7 @@ data class BurgerStackable(
                 StatusEffectEntry.CODEC.listOf().fieldOf("statusEffects").orElse(listOf())
                     .forGetter(BurgerStackable::statusEffects),
                 Codec.STRING.optionalFieldOf("customName").forGetter(BurgerStackable::customName),
+                IngredientRenderSettings.CODEC.fieldOf("renderSettings").forGetter(BurgerStackable::renderSettings),
                 BurgeredRegistries.EAT_EVENT.byNameCodec().optionalFieldOf("eatEvent")
                     .forGetter(BurgerStackable::eatEvent),
             ).apply(builder, ::BurgerStackable)
@@ -49,6 +52,7 @@ data class BurgerStackable(
             buf.writeInt(stack.statusEffects.size)
             stack.statusEffects.forEach { StatusEffectEntry.STREAM_CODEC.encode(buf, it) }
             buf.writeOptional(stack.customName) { subBuf, str -> subBuf.writeUtf(str) }
+            IngredientRenderSettings.STREAM_CODEC.encode(buf, stack.renderSettings)
             buf.writeOptional(stack.eatEvent) { subBuf, event ->
                 subBuf.writeResourceLocation(
                     BurgeredRegistries.EAT_EVENT.getId(
@@ -70,16 +74,17 @@ data class BurgerStackable(
                 statusEffects.add(se)
             }
             val customName = buf.readOptional { subBuf -> subBuf.readUtf() }
+            val renderSettings = IngredientRenderSettings.STREAM_CODEC.decode(buf)
             val eatEvent: Optional<BurgerStackableEatCallback> = buf.readOptional { subBuf ->
                 BurgeredRegistries.EAT_EVENT.get(subBuf.readResourceLocation()) ?: BurgeredEatEvents.NO_OP
             }
 
-            return BurgerStackable(item, hunger, saturation, modelHeight, statusEffects, customName, eatEvent)
+            return BurgerStackable(item, hunger, saturation, modelHeight, statusEffects, customName, renderSettings, eatEvent)
         }
     }
 }
 
 fun interface BurgerStackableEatCallback : LivingEntityEvents.EatCallback
 
-@Internal
+@ApiStatus.Internal
 object BurgerStackables : MutableList<BurgerStackable> by mutableListOf()

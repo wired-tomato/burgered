@@ -16,10 +16,7 @@ import net.minecraft.world.level.levelgen.RandomSupport
 import net.wiredtomato.burgered.api.Burger
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredient
 import net.wiredtomato.burgered.api.ingredient.BurgerIngredientInstance
-import net.wiredtomato.burgered.api.rendering.IngredientRenderSettings
-import net.wiredtomato.burgered.api.rendering.ModelId
-import net.wiredtomato.burgered.api.rendering.WithCustomModel
-import net.wiredtomato.burgered.api.rendering.WithModelHeight
+import net.wiredtomato.burgered.api.rendering.*
 import net.wiredtomato.burgered.client.config.BurgeredClientConfig
 import net.wiredtomato.burgered.init.BurgeredDataComponents
 import net.wiredtomato.burgered.item.components.BurgerComponent
