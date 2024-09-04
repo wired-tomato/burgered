@@ -20,7 +20,6 @@ data class BurgerStackable(
     val item: Item,
     val hunger: Int,
     val saturation: Float,
-    val modelHeight: Double = 1.0,
     val statusEffects: List<StatusEffectEntry> = listOf(),
     val customName: Optional<String> = Optional.empty(),
     val renderSettings: IngredientRenderSettings,
@@ -32,7 +31,6 @@ data class BurgerStackable(
                 BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(BurgerStackable::item),
                 Codec.INT.fieldOf("hunger").orElse(0).forGetter(BurgerStackable::hunger),
                 Codec.FLOAT.fieldOf("saturation").orElse(0f).forGetter(BurgerStackable::saturation),
-                Codec.DOUBLE.fieldOf("modelHeight").orElse(1.0).forGetter(BurgerStackable::modelHeight),
                 StatusEffectEntry.CODEC.listOf().fieldOf("statusEffects").orElse(listOf())
                     .forGetter(BurgerStackable::statusEffects),
                 Codec.STRING.optionalFieldOf("customName").forGetter(BurgerStackable::customName),
@@ -48,7 +46,6 @@ data class BurgerStackable(
             buf.writeResourceLocation(BuiltInRegistries.ITEM.getKey(stack.item))
             buf.writeInt(stack.hunger)
             buf.writeFloat(stack.saturation)
-            buf.writeDouble(stack.modelHeight)
             buf.writeInt(stack.statusEffects.size)
             stack.statusEffects.forEach { StatusEffectEntry.STREAM_CODEC.encode(buf, it) }
             buf.writeOptional(stack.customName) { subBuf, str -> subBuf.writeUtf(str) }
@@ -66,7 +63,6 @@ data class BurgerStackable(
             val item = BuiltInRegistries.ITEM.get(buf.readResourceLocation())
             val hunger = buf.readInt()
             val saturation = buf.readFloat()
-            val modelHeight = buf.readDouble()
             val statusEffectsSize = buf.readInt()
             val statusEffects = mutableListOf<StatusEffectEntry>()
             (0..<statusEffectsSize).forEach { _ ->
@@ -79,7 +75,7 @@ data class BurgerStackable(
                 BurgeredRegistries.EAT_EVENT.get(subBuf.readResourceLocation()) ?: BurgeredEatEvents.NO_OP
             }
 
-            return BurgerStackable(item, hunger, saturation, modelHeight, statusEffects, customName, renderSettings, eatEvent)
+            return BurgerStackable(item, hunger, saturation, statusEffects, customName, renderSettings, eatEvent)
         }
     }
 }
