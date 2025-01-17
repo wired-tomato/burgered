@@ -109,11 +109,13 @@ subprojects {
     }
 
     publishing {
+        if (project.name.contains("deplatformed")) return@publishing
+
         publications {
             create<MavenPublication>(mod_id) {
                 groupId = group.toString()
                 artifactId = mod_id
-                version = if (mod_version.contains("beta")) "$mod_version-SNAPSHOT" else mod_version
+                version = if (mod_version.contains("beta")) "$mod_version-${project.name}-SNAPSHOT" else "$mod_version-${project.name}"
 
                 from(components["java"])
             }
