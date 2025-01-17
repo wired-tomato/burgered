@@ -7,6 +7,8 @@ plugins {
     id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
     id("fabric-loom") version "1.9-SNAPSHOT" apply false
     id("net.neoforged.moddev") version "2.0.74" apply false
+    id("com.modrinth.minotaur") version "2.+"
+    id("me.modmuss50.mod-publish-plugin") version "0.8.3"
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     `maven-publish`
 }
@@ -48,7 +50,7 @@ subprojects {
     apply(plugin = "maven-publish")
 
     group = rootProject.property("group").toString()
-    base.archivesName = "$mod_id-${path.replace(":", "-")}"
+    base.archivesName = "$mod_id-${path.replace(":", "")}"
     version = mod_version
 
     java {
@@ -128,6 +130,35 @@ subprojects {
                     }
                 }
             }
+        }
+    }
+}
+
+val modrinthPublish = listOf("fabric", "neoforge")
+
+subprojects {
+    if (project.name !in modrinthPublish) return@subprojects
+
+    project.version = mod_version
+
+    apply(plugin = "me.modmuss50.mod-publish-plugin")
+    if (project.name == "fabric") apply(plugin = "fabric-loom")
+
+    publishMods {
+        file = (if (project.name == "fabric") tasks.getByName("remapJar", org.gradle.jvm.tasks.Jar::class) else tasks.getByName("jar", org.gradle.jvm.tasks.Jar::class)).archiveFile
+        type = if (mod_version.contains("beta")) BETA else STABLE
+        modLoaders.add(project.name)
+        changelog = ""
+
+        modrinth {
+            accessToken = System.getenv("MODRINTH_TOKEN")
+            projectId = "J8ozcPak"
+            minecraftVersions.add(minecraft_version)
+
+            requires("cloth-config")
+            if (project.name == "fabric") {
+                requires("fabric-api", "fabric-language-kotlin")
+            } else requires("kotlin-for-forge")
         }
     }
 }
