@@ -1,0 +1,53 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${mod_description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://modrinth.com/mod/burgered",
+        "sources": "https://github.com/wired-tomato/burgered"
+    },
+    "license": "${license}",
+    "icon": "assets/${mod_id}/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            {
+                "value": "net.wiredtomato.burgered.fabric.FabricBurgered",
+                "adapter": "kotlin"
+            }
+        ],
+        "client": [
+            {
+                "value": "net.wiredtomato.burgered.fabric.client.FabricBurgeredClient",
+                "adapter": "kotlin"
+            }
+        ],
+        "modmenu": [
+            {
+                "value": "net.wiredtomato.burgered.fabric.compat.modmenu.BurgeredModMenu",
+                "adapter": "kotlin"
+            }
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json",
+        "${mod_id}.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "fabric-language-kotlin": ">=${flk_version}",
+        "cloth-config": ">=${cloth_config_version}",
+        "minecraft": "~${minecraft_version}",
+        "java": ">=${java_version}"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
+}
+  
